@@ -1,0 +1,14 @@
+#Configure the host server:
+server:
+  port: 8080
+  servlet:
+    context-path: /taxes
+
+#Configure MongoDB:
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: testdb
+      auto-index-creation: true
