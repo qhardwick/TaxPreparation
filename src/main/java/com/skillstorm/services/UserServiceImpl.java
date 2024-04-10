@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUserById(String id, UserDto updatedUser) {
         findUserById(id);
+        updatedUser.setId(id);
         return new UserDto(userRepository.save(updatedUser.getUser()));
     }
 
