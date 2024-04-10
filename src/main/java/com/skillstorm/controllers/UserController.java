@@ -19,6 +19,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Test Endpoint:
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("Hello");
+    }
+
     // Add new User:
     @PostMapping
     public ResponseEntity<UserDto> addUser(@RequestBody UserDto newUser) {

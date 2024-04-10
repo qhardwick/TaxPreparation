@@ -25,16 +25,20 @@
         </dependency>
 
         <!-- Driver for connecting to OAth2 -->
+        <!-- Commented out because it is preventing code from running until we get OAuth2 configured.
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
+        -->
 
-        <!-- Spring Security. Provides password encryption -->
+        <!-- Spring Security. Provides password encryption and unauthorized requests to application endpoints -->
+        <!-- Commented out because it is preventing code from running until we get Security configured.
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        -->
 
         <!-- Provides Tomcat server as well as Spring MVC stereotypes -->
         <dependency>
