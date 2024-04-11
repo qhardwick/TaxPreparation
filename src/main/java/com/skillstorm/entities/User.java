@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "users")
 public class User {
 
-    //Mongo will automatically convert to a BSON
+    // Mongo will automatically generate a BSON id if the field is null
     @Id
     private String id;
 

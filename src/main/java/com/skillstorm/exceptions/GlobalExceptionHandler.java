@@ -19,9 +19,9 @@ public class GlobalExceptionHandler {
         this.environment = environment;
     }
 
-    // Handle UserNotFoundException:
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleUserNotFoundException(UserNotFoundException e) {
+    // Handle Bad Requests from trying to look up entities not present in DB:
+    @ExceptionHandler({UserNotFoundException.class, W2NotFoundException.class})
+    public ResponseEntity<ErrorMessage> handleEntityNotFoundExceptions(IllegalArgumentException e) {
         ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setCode(HttpStatus.NOT_FOUND.value());
         errorMessage.setMessage(e.getMessage());
