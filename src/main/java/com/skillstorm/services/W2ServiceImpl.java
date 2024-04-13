@@ -6,12 +6,14 @@ import com.skillstorm.exceptions.W2NotFoundException;
 import com.skillstorm.repositories.W2Repository;
 import com.skillstorm.utils.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@PropertySource("classpath:SystemMessages.properties")
 public class W2ServiceImpl implements W2Service {
 
     private final W2Repository w2Repository;
@@ -29,7 +31,7 @@ public class W2ServiceImpl implements W2Service {
     }
 
     @Override
-    public W2Dto findW2ById(String id) {
+    public W2Dto findW2ById(int id) {
         Optional<W2> w2Optional = w2Repository.findById(id);
         if(!w2Optional.isPresent()) {
             throw new W2NotFoundException(environment.getProperty(SystemMessages.W2_NOT_FOUND.toString()));
@@ -38,14 +40,14 @@ public class W2ServiceImpl implements W2Service {
     }
 
     @Override
-    public W2Dto updateW2ById(String id, W2Dto updatedW2) {
+    public W2Dto updateW2ById(int id, W2Dto updatedW2) {
         findW2ById(id);
         updatedW2.setId(id);
         return new W2Dto(w2Repository.save(updatedW2.getW2()));
     }
 
     @Override
-    public void deleteW2ById(String id) {
+    public void deleteW2ById(int id) {
         findW2ById(id);
         w2Repository.deleteById(id);
     }

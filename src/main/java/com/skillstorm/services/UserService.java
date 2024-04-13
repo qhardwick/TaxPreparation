@@ -8,11 +8,11 @@ public interface UserService {
     UserDto addUser(UserDto newUser);
 
     // Find User by ID:
-    UserDto findUserById(String id);
+    UserDto findUserById(int id);
 
     // Update User by ID:
-    UserDto updateUserById(String id, UserDto updatedUser);
+    UserDto updateUserById(int id, UserDto updatedUser);
 
     // Delete User by ID:
-    void deleteUserById(String id);
+    void deleteUserById(int id);
 }

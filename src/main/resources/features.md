@@ -21,6 +21,8 @@
 * As a User, I want to prepopulate my personal details with previous data from past forms.
 
 ### Stretch Goals
+* As a User, I may qualify for tax deductions.
+* As a User, I may qualify for tax credits.
 * As a User, I can upload a photo of my W2.
-* As a User, I can submit tax returms for other people.
+* As a User, I can submit tax returns for other people.
 * As a User, I can view tax returns from previous years.

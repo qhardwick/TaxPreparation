@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class W2Dto {
 
-    private String id;
+    private int id;
 
     private String employer;
 

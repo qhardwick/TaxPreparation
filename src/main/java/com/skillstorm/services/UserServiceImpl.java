@@ -6,12 +6,14 @@ import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.UserRepository;
 import com.skillstorm.utils.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@PropertySource("classpath:SystemMessages.properties")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     // Find User by ID:
     @Override
-    public UserDto findUserById(String id) {
+    public UserDto findUserById(int id) {
         Optional<User> userOptional = userRepository.findById(id);
         if(!userOptional.isPresent()) {
             throw new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString()));
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     // Update User by ID:
     @Override
-    public UserDto updateUserById(String id, UserDto updatedUser) {
+    public UserDto updateUserById(int id, UserDto updatedUser) {
         findUserById(id);
         updatedUser.setId(id);
         return new UserDto(userRepository.save(updatedUser.getUser()));
@@ -49,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     // Delete User by ID:
     @Override
-    public void deleteUserById(String id) {
+    public void deleteUserById(int id) {
         findUserById(id);
         userRepository.deleteById(id);
     }

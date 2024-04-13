@@ -34,19 +34,19 @@ public class W2Controller {
 
     // Find W2 by ID:
     @GetMapping("/{id}")
-    public ResponseEntity<W2Dto> findW2ById(@PathVariable String id) {
+    public ResponseEntity<W2Dto> findW2ById(@PathVariable int id) {
         return ResponseEntity.ok(w2Service.findW2ById(id));
     }
 
     // Update W2 by ID:
     @PutMapping("/{id}")
-    public ResponseEntity<W2Dto> updateW2ById(@PathVariable String id, @RequestBody W2Dto updatedW2) {
+    public ResponseEntity<W2Dto> updateW2ById(@PathVariable int id, @RequestBody W2Dto updatedW2) {
         return ResponseEntity.ok(w2Service.updateW2ById(id, updatedW2));
     }
 
     // Delete W2 by ID:
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteW2ById(@PathVariable String id) {
+    public ResponseEntity<Void> deleteW2ById(@PathVariable int id) {
         w2Service.deleteW2ById(id);
         return ResponseEntity.noContent().build();
     }
