@@ -2,6 +2,7 @@ package com.skillstorm.controllers;
 
 import com.skillstorm.dtos.W2Dto;
 import com.skillstorm.services.W2Service;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class W2Controller {
 
     // Add new W2:
     @PostMapping
-    public ResponseEntity<W2Dto> addW2(@RequestBody W2Dto newW2) {
+    public ResponseEntity<W2Dto> addW2(@Valid @RequestBody W2Dto newW2) {
         W2Dto createdW2 = w2Service.addW2(newW2);
         return ResponseEntity.created(URI.create("/" + createdW2.getId())).body(createdW2);
     }
@@ -40,7 +41,7 @@ public class W2Controller {
 
     // Update W2 by ID:
     @PutMapping("/{id}")
-    public ResponseEntity<W2Dto> updateW2ById(@PathVariable int id, @RequestBody W2Dto updatedW2) {
+    public ResponseEntity<W2Dto> updateW2ById(@PathVariable int id, @Valid @RequestBody W2Dto updatedW2) {
         return ResponseEntity.ok(w2Service.updateW2ById(id, updatedW2));
     }
 

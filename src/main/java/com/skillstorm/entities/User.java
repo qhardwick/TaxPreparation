@@ -3,6 +3,9 @@ package com.skillstorm.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "users")
@@ -20,8 +23,18 @@ public class User {
 
     private String email;
 
+    private String address;
+
     @Column(name = "phone_number")
-    long phoneNumber;
+    private String phoneNumber;
 
+    @Column(name = "ssn")
+    private String ssn;
 
+    @OneToMany(mappedBy = "user")
+    private List<W2> w2s;
+
+    public User() {
+        this.w2s = new ArrayList<>(3);
+    }
 }

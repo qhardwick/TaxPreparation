@@ -2,8 +2,11 @@ package com.skillstorm.controllers;
 
 import com.skillstorm.dtos.UserDto;
 import com.skillstorm.services.UserService;
+import com.skillstorm.validations.AddUserGroup;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -27,7 +30,7 @@ public class UserController {
 
     // Add new User:
     @PostMapping
-    public ResponseEntity<UserDto> addUser(@RequestBody UserDto newUser) {
+    public ResponseEntity<UserDto> addUser(@Validated(AddUserGroup.class) @RequestBody UserDto newUser) {
         UserDto createdUser = userService.addUser(newUser);
         return ResponseEntity.created(URI.create("/" + createdUser.getId())).body(createdUser);
     }
@@ -40,7 +43,7 @@ public class UserController {
 
     // Update User by ID:
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUserById(@PathVariable int id, @RequestBody UserDto updatedUser) {
+    public ResponseEntity<UserDto> updateUserById(@PathVariable int id, @Valid @RequestBody UserDto updatedUser) {
         return ResponseEntity.ok(userService.updateUserById(id, updatedUser));
     }
 
