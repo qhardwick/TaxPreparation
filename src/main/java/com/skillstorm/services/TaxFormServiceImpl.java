@@ -57,7 +57,7 @@ public class TaxFormServiceImpl implements TaxFormService {
         taxFormRepository.deleteById(id);
     }
 
-    // Calculate taxes owed:
+    // Calculate federal income taxes owed:
     private double calculateFederalTaxesOwed(double totalWages) {
         if(totalWages <= 9875) {
             return totalWages * 0.1;
@@ -81,16 +81,42 @@ public class TaxFormServiceImpl implements TaxFormService {
         return 156235 + (totalWages - 518400) * 0.37;
     }
 
+    // Calculate social security taxes owed:
+    private double calculateSocialSecurityTaxesOwed(double totalWages) {
+        return totalWages * 0.062;
+    }
+
+    // Calculate medicare taxes owed:
+    private double calculateMedicareTaxesOwed(double totalWages) {
+        return totalWages * 0.0145;
+    }
+
+    // Calculate total taxes owed:
+    private double calculateTotalTaxesOwed(double totalWages) {
+        return calculateFederalTaxesOwed(totalWages) + calculateSocialSecurityTaxesOwed(totalWages) + calculateMedicareTaxesOwed(totalWages);
+    }
+
     // Calculate Refund:
-    // TO-DO: Add logic for Deductions and Credits, calculate social security and medicare taxes
+    // TO-DO: Add logic for Deductions and Credits
     private double calculateRefund(TaxFormDto taxForm) {
-        double taxesOwed = calculateFederalTaxesOwed(taxForm.getTotalWages());
+
+        // Combined taxes owed based on total wages:
+        double taxesOwed = calculateTotalTaxesOwed(taxForm.getTotalWages());
+
+        // Taxes already witheld:
         double taxesPaid = taxForm.getTotalFederalTaxesWithheld() + taxForm.getTotalSocialSecurityTaxesWithheld()
                 + taxForm.getTotalMedicareTaxesWithheld();
-        double deductions = 0; // taxForm.getTotalDeductions().stream()..mapToDouble(deduction -> deduction.getAmount()).sum();
+
+        // Total Deductions:
+        double deductions = 0; // taxForm.getTotalDeductions().stream().mapToDouble(deduction -> deduction.getAmount()).sum();
+
+        // Taxes owed after deductions:
+        double taxesOwedAfterDeductions = deductions > taxesOwed ? 0 : taxesOwed - deductions;
+
+        // Total Credits:
         double credits = 0; // taxForm.getTotalCredits().stream().mapToDouble(credit -> credit.getAmount()).sum();
 
-        return taxesPaid + credits - taxesOwed;
+        return taxesPaid + credits - taxesOwedAfterDeductions;
     }
 
 }
