@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     // Handle 404 Not Found from trying to look up entities not present in DB:
-    @ExceptionHandler({UserNotFoundException.class, W2NotFoundException.class, TaxFormNotFoundException.class, DeductionNotFoundException.class})
+    @ExceptionHandler({UserNotFoundException.class, W2NotFoundException.class, TaxFormNotFoundException.class, DeductionNotFoundException.class, CreditNotFoundException.class})
     public ResponseEntity<ErrorMessage> handleEntityNotFoundExceptions(IllegalArgumentException e) {
         ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setCode(HttpStatus.NOT_FOUND.value());

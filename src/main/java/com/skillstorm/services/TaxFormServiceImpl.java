@@ -58,7 +58,7 @@ public class TaxFormServiceImpl implements TaxFormService {
     }
 
     // Calculate taxes owed:
-    private double calculateTaxesOwed(double totalWages) {
+    private double calculateFederalTaxesOwed(double totalWages) {
         if(totalWages <= 9875) {
             return totalWages * 0.1;
         }
@@ -82,13 +82,15 @@ public class TaxFormServiceImpl implements TaxFormService {
     }
 
     // Calculate Refund:
-    //TO-DO: Add logic for Deductions and Credits
+    // TO-DO: Add logic for Deductions and Credits, calculate social security and medicare taxes
     private double calculateRefund(TaxFormDto taxForm) {
-        double taxesOwed = calculateTaxesOwed(taxForm.getTotalWages());
-        //double deductions = taxForm.getTotalDeductions().stream().filter(deduction -> !deduction.isCredit())
-        //        .mapToDouble(deduction -> deduction.getAmount()).sum();
-        return taxForm.getTotalFederalTaxesWithheld() + taxForm.getTotalSocialSecurityTaxesWithheld()
-                + taxForm.getTotalMedicareTaxesWithheld() - taxesOwed;
+        double taxesOwed = calculateFederalTaxesOwed(taxForm.getTotalWages());
+        double taxesPaid = taxForm.getTotalFederalTaxesWithheld() + taxForm.getTotalSocialSecurityTaxesWithheld()
+                + taxForm.getTotalMedicareTaxesWithheld();
+        double deductions = 0; // taxForm.getTotalDeductions().stream()..mapToDouble(deduction -> deduction.getAmount()).sum();
+        double credits = 0; // taxForm.getTotalCredits().stream().mapToDouble(credit -> credit.getAmount()).sum();
+
+        return taxesPaid + credits - taxesOwed;
     }
 
 }

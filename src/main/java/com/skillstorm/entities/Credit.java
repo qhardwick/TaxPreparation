@@ -1,12 +1,13 @@
 package com.skillstorm.entities;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "deductions")
-public class Deduction {
+@Table(name = "credits")
+public class Credit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

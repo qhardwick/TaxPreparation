@@ -7,6 +7,7 @@ public enum SystemMessages {
     W2_NOT_FOUND("w2.not.found"),
     TAX_FORM_NOT_FOUND("taxForm.not.found"),
     DEDUCTION_NOT_FOUND("deduction.not.found"),
+    CREDIT_NOT_FOUND("credit.not.found"),
 
     // Validation Messages:
     // User:
