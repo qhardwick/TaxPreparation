@@ -12,6 +12,7 @@ public class CreditController {
 
     private final CreditService creditService;
 
+    // SCA test
     @Autowired
     public CreditController(CreditService creditService) {
         this.creditService = creditService;
