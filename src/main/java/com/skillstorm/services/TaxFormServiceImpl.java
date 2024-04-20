@@ -29,7 +29,7 @@ public class TaxFormServiceImpl implements TaxFormService {
     @Override
     public TaxFormDto addTaxForm(TaxFormDto newTaxForm) {
         newTaxForm.setRefund(calculateRefund(newTaxForm));
-        return new TaxFormDto(taxFormRepository.save(newTaxForm.getTaxForm()));
+        return new TaxFormDto(taxFormRepository.saveAndFlush(newTaxForm.getTaxForm()));
     }
 
     // Find TaxForm by ID:
@@ -47,7 +47,7 @@ public class TaxFormServiceImpl implements TaxFormService {
     public TaxFormDto updateTaxFormById(int id, TaxFormDto updatedTaxForm) {
         findTaxFormById(id);
         updatedTaxForm.setId(id);
-        return new TaxFormDto(taxFormRepository.save(updatedTaxForm.getTaxForm()));
+        return new TaxFormDto(taxFormRepository.saveAndFlush(updatedTaxForm.getTaxForm()));
     }
 
     // Delete TaxForm by ID:
@@ -100,17 +100,17 @@ public class TaxFormServiceImpl implements TaxFormService {
     // TO-DO: Add logic for Deductions and Credits
     private double calculateRefund(TaxFormDto taxForm) {
 
-        // Combined taxes owed based on total wages:
+        // Combined taxes owed based on total wages. Not accounting for taxes already withheld, deductions, or credits:
         double taxesOwed = calculateTotalTaxesOwed(taxForm.getTotalWages());
 
-        // Taxes already witheld:
+        // Taxes already withheld:
         double taxesPaid = taxForm.getTotalFederalTaxesWithheld() + taxForm.getTotalSocialSecurityTaxesWithheld()
                 + taxForm.getTotalMedicareTaxesWithheld();
 
         // Total Deductions:
         double deductions = 0; // taxForm.getTotalDeductions().stream().mapToDouble(deduction -> deduction.getAmount()).sum();
 
-        // Taxes owed after deductions:
+        // Taxes owed after deductions. Deductions cannot reduce taxes owed below 0:
         double taxesOwedAfterDeductions = deductions > taxesOwed ? 0 : taxesOwed - deductions;
 
         // Total Credits:

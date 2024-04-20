@@ -29,7 +29,7 @@ public class DeductionServiceImpl implements DeductionService {
     // Add new Deduction:
     @Override
     public DeductionDto addDeduction(DeductionDto newDeduction) {
-        return new DeductionDto(deductionRepository.save(newDeduction.getDeduction()));
+        return new DeductionDto(deductionRepository.saveAndFlush(newDeduction.getDeduction()));
     }
 
     // Find Deduction by ID:
@@ -53,7 +53,7 @@ public class DeductionServiceImpl implements DeductionService {
     public DeductionDto updateDeductionById(int id, DeductionDto updatedDeduction) {
         findDeductionById(id);
         updatedDeduction.setId(id);
-        return new DeductionDto(deductionRepository.save(updatedDeduction.getDeduction()));
+        return new DeductionDto(deductionRepository.saveAndFlush(updatedDeduction.getDeduction()));
     }
 
     // Delete Deduction by ID:

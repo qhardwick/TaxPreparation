@@ -28,7 +28,7 @@ public class CreditServiceImpl implements CreditService {
     // Add Credit:
     @Override
     public CreditDto addCredit(CreditDto credit) {
-        return new CreditDto(creditRepository.save(credit.getCredit()));
+        return new CreditDto(creditRepository.saveAndFlush(credit.getCredit()));
     }
 
     // Get Credit By Id:
@@ -46,7 +46,7 @@ public class CreditServiceImpl implements CreditService {
     public CreditDto updateCreditById(int id, CreditDto updatedCredit) {
         findCreditById(id);
         updatedCredit.setId(id);
-        return new CreditDto(creditRepository.save(updatedCredit.getCredit()));
+        return new CreditDto(creditRepository.saveAndFlush(updatedCredit.getCredit()));
     }
 
     // Delete Credit By Id:

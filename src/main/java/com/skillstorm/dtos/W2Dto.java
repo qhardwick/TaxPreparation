@@ -2,13 +2,10 @@ package com.skillstorm.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.skillstorm.entities.W2;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Year;
 
 @Data
 @NoArgsConstructor
@@ -34,6 +31,9 @@ public class W2Dto {
     @Min(value = 0, message = "{w2.medicareTaxesWithheld.min}")
     private double medicareTaxesWithheld;
 
+    @Min(value = 1, message = "{w2.userId.min}")
+    private int userId;
+
     public W2Dto(W2 w2) {
         this.id = w2.getId();
         this.employer = w2.getEmployer();
@@ -42,6 +42,7 @@ public class W2Dto {
         this.federalTaxesWithheld = w2.getFederalTaxesWithheld();
         this.socialSecurityTaxesWithheld = w2.getSocialSecurityTaxesWithheld();
         this.medicareTaxesWithheld = w2.getMedicareTaxesWithheld();
+        this.userId = w2.getId();
     }
 
     @JsonIgnore
@@ -54,6 +55,7 @@ public class W2Dto {
         w2.setFederalTaxesWithheld(this.federalTaxesWithheld);
         w2.setSocialSecurityTaxesWithheld(this.socialSecurityTaxesWithheld);
         w2.setMedicareTaxesWithheld(this.medicareTaxesWithheld);
+        w2.setUserId(this.getUserId());
 
         return w2;
     }

@@ -10,12 +10,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.Default;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 public class UserDto {
 
     private int id;
@@ -47,7 +46,12 @@ public class UserDto {
 
     private List<W2> w2s;
 
+    public UserDto() {
+        w2s = new ArrayList<>(3);
+    }
+
     public UserDto(User user) {
+        this();
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

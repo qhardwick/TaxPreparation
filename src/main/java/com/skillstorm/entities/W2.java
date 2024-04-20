@@ -24,7 +24,7 @@ public class W2 {
 
     private double medicareTaxesWithheld;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private int userId;
 }
+

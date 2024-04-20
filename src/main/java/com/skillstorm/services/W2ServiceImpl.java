@@ -27,7 +27,7 @@ public class W2ServiceImpl implements W2Service {
 
     @Override
     public W2Dto addW2(W2Dto newW2) {
-        return new W2Dto(w2Repository.save(newW2.getW2()));
+        return new W2Dto(w2Repository.saveAndFlush(newW2.getW2()));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class W2ServiceImpl implements W2Service {
     public W2Dto updateW2ById(int id, W2Dto updatedW2) {
         findW2ById(id);
         updatedW2.setId(id);
-        return new W2Dto(w2Repository.save(updatedW2.getW2()));
+        return new W2Dto(w2Repository.saveAndFlush(updatedW2.getW2()));
     }
 
     @Override

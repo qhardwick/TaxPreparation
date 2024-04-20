@@ -6,6 +6,8 @@ import com.skillstorm.validations.AddUserGroup;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,7 @@ public class UserController {
 
     // Add new User:
     @PostMapping
+    @Secured("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDto> addUser(@Validated(AddUserGroup.class) @RequestBody UserDto newUser) {
         UserDto createdUser = userService.addUser(newUser);
         return ResponseEntity.created(URI.create("/" + createdUser.getId())).body(createdUser);
@@ -37,6 +40,7 @@ public class UserController {
 
     // Find User by ID:
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<UserDto> findUserById(@PathVariable int id) {
         return ResponseEntity.ok(userService.findUserById(id));
     }

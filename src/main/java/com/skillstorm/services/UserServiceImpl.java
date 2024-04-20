@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     // Add new User:
     @Override
     public UserDto addUser(UserDto newUser) {
-        return new UserDto(userRepository.save(newUser.getUser()));
+        return new UserDto(userRepository.saveAndFlush(newUser.getUser()));
     }
 
     // Find User by ID:
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUserById(int id, UserDto updatedUser) {
         findUserById(id);
         updatedUser.setId(id);
-        return new UserDto(userRepository.save(updatedUser.getUser()));
+        return new UserDto(userRepository.saveAndFlush(updatedUser.getUser()));
     }
 
     // Delete User by ID:

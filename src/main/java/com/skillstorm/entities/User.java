@@ -21,6 +21,7 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "email", unique = true)
     private String email;
 
     private String address;
@@ -31,7 +32,7 @@ public class User {
     @Column(name = "ssn")
     private String ssn;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<W2> w2s;
 
     public User() {

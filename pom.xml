@@ -13,9 +13,17 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>com.skillstorm.TaxStorm</name>
     <description>Spring Boot project to help prepare income taxes</description>
+
+
     <properties>
+        <!-- Java version -->
         <java.version>17</java.version>
+
+        <!-- Sonar Cloud SCA github actions tool -->
+        <sonar.organization>210712-richard</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
+
     <dependencies>
 
         <!-- Spring Data JPA. Provides JPA repositories and Hibernate -->
@@ -46,12 +54,10 @@
         -->
 
         <!-- Spring Security. Provides password encryption and unauthorized requests to application endpoints -->
-        <!-- Commented out because it is preventing code from running until we get Security configured.
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        -->
 
         <!-- Provides Tomcat server as well as Spring MVC stereotypes -->
         <dependency>
@@ -99,7 +105,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Provides testing used in conjuction with Spring Security -->
+        <!-- Provides testing used in conjunction with Spring Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
