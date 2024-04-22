@@ -26,5 +26,10 @@ public class W2 {
 
     @Column(name = "user_id")
     private int userId;
+
+    // Specifies that we're only interested in the user's id. We don't need the entire user object.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private User user;
 }
 

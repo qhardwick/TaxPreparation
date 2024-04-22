@@ -4,12 +4,14 @@ import com.skillstorm.dtos.CreditDto;
 import com.skillstorm.entities.Credit;
 import com.skillstorm.exceptions.CreditNotFoundException;
 import com.skillstorm.repositories.CreditRepository;
-import com.skillstorm.utils.SystemMessages;
+import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +41,12 @@ public class CreditServiceImpl implements CreditService {
             throw new CreditNotFoundException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString()));
         }
         return new CreditDto(creditOptional.get());
+    }
+
+    // Get All Credits:
+    @Override
+    public List<CreditDto> findAllCredits() {
+        return creditRepository.findAll().stream().map(CreditDto::new).toList();
     }
 
     // Update Credit By Id:

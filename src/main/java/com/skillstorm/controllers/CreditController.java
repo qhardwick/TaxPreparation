@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/credits")
 public class CreditController {
@@ -34,6 +36,12 @@ public class CreditController {
     @GetMapping("/{id}")
     public ResponseEntity<CreditDto> findCreditById(@PathVariable int id) {
         return ResponseEntity.ok(creditService.findCreditById(id));
+    }
+
+    // Get All Credits:
+    @GetMapping
+    public ResponseEntity<List<CreditDto>> findAllCredits() {
+        return ResponseEntity.ok(creditService.findAllCredits());
     }
 
     // Update Credit By Id:

@@ -4,7 +4,7 @@ import com.skillstorm.dtos.TaxFormDto;
 import com.skillstorm.entities.TaxForm;
 import com.skillstorm.exceptions.TaxFormNotFoundException;
 import com.skillstorm.repositories.TaxFormRepository;
-import com.skillstorm.utils.SystemMessages;
+import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;

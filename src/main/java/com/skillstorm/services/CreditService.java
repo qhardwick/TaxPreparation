@@ -2,6 +2,8 @@ package com.skillstorm.services;
 
 import com.skillstorm.dtos.CreditDto;
 
+import java.util.List;
+
 public interface CreditService {
 
     // Add new Credit:
@@ -9,6 +11,9 @@ public interface CreditService {
 
     // Find Credit by Id:
     CreditDto findCreditById(int id);
+
+    // Find all Credits:
+    List<CreditDto> findAllCredits();
 
     // Update Credit by Id:
     CreditDto updateCreditById(int id, CreditDto updatedCredit);

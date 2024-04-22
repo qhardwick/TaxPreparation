@@ -4,7 +4,7 @@ import com.skillstorm.dtos.UserDto;
 import com.skillstorm.entities.User;
 import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.UserRepository;
-import com.skillstorm.utils.SystemMessages;
+import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;

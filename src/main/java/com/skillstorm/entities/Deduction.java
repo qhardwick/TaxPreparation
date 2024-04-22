@@ -12,5 +12,7 @@ public class Deduction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private double amount;
+
+    @Column(name = "deduction_rate")
+    private double rate;
 }

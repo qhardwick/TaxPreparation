@@ -4,7 +4,7 @@ import com.skillstorm.dtos.W2Dto;
 import com.skillstorm.entities.W2;
 import com.skillstorm.exceptions.W2NotFoundException;
 import com.skillstorm.repositories.W2Repository;
-import com.skillstorm.utils.SystemMessages;
+import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;

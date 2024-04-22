@@ -1,4 +1,4 @@
-package com.skillstorm.utils;
+package com.skillstorm.configs;
 
 public enum SystemMessages {
 

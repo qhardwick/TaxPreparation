@@ -1,4 +1,4 @@
-package com.skillstorm.utils;
+package com.skillstorm.configs;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

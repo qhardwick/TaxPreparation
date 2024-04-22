@@ -13,5 +13,5 @@ public class Credit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private double amount;
+    private double value;
 }

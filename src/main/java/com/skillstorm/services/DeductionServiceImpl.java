@@ -4,7 +4,7 @@ import com.skillstorm.dtos.DeductionDto;
 import com.skillstorm.entities.Deduction;
 import com.skillstorm.exceptions.DeductionNotFoundException;
 import com.skillstorm.repositories.DeductionRepository;
-import com.skillstorm.utils.SystemMessages;
+import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
