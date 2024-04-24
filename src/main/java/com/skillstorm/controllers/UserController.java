@@ -1,9 +1,11 @@
 package com.skillstorm.controllers;
 
+import com.skillstorm.dtos.UserCreditDto;
 import com.skillstorm.dtos.UserDto;
 import com.skillstorm.services.UserService;
 import com.skillstorm.validations.AddUserGroup;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -45,6 +47,12 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
+    // Find User by Username:
+    @GetMapping()
+    public ResponseEntity<UserDto> findUserByUsername(@PathParam("username") String username) {
+        return ResponseEntity.ok(userService.findUserByUsername(username));
+    }
+
     // Update User by ID:
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUserById(@PathVariable int id, @Valid @RequestBody UserDto updatedUser) {
@@ -56,6 +64,12 @@ public class UserController {
     public ResponseEntity<Void> deleteUserById(@PathVariable int id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Add Tax Credit to User:
+    @PostMapping("/{id}/credits")
+    public ResponseEntity<UserCreditDto> addTaxCredit(@PathVariable int id, @RequestBody UserCreditDto creditToBeAdded) {
+        return ResponseEntity.ok(userService.addTaxCredit(id, creditToBeAdded));
     }
 
 }

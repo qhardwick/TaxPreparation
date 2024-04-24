@@ -9,19 +9,14 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.skillstorm</groupId>
-    <artifactId>TaxPreparation</artifactId>
+    <artifactId>TaxStorm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>com.skillstorm.TaxStorm</name>
     <description>Spring Boot project to help prepare income taxes</description>
 
 
     <properties>
-        <!-- Java version -->
         <java.version>17</java.version>
-
-        <!-- Sonar Cloud SCA github actions tool -->
-        <sonar.organization>210712-richard</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>

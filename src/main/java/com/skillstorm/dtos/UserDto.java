@@ -33,6 +33,10 @@ public class UserDto {
     @Email(groups = {AddUserGroup.class, Default.class}, message = "{user.email.valid}")
     private String email;
 
+    private String username;
+
+    private String password;
+
     @NotEmpty(message = "{user.address.must}")
     private String address;
 
@@ -56,10 +60,17 @@ public class UserDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
         this.address = user.getAddress();
         this.phoneNumber = user.getPhoneNumber();
         this.ssn = user.getSsn();
         this.w2s = user.getW2s();
+    }
+
+    @JsonIgnore
+    public String getPassword() {
+        return this.password;
     }
 
     @JsonIgnore
@@ -69,6 +80,8 @@ public class UserDto {
         user.setFirstName(this.firstName);
         user.setLastName(this.lastName);
         user.setEmail(this.email);
+        user.setUsername(this.username);
+        user.setPassword(this.password);
         user.setAddress(this.address);
         user.setPhoneNumber(this.phoneNumber);
         user.setSsn(this.ssn);

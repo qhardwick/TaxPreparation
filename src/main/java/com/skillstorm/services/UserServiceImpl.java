@@ -1,8 +1,10 @@
 package com.skillstorm.services;
 
+import com.skillstorm.dtos.UserCreditDto;
 import com.skillstorm.dtos.UserDto;
 import com.skillstorm.entities.User;
 import com.skillstorm.exceptions.UserNotFoundException;
+import com.skillstorm.repositories.UserCreditRepository;
 import com.skillstorm.repositories.UserRepository;
 import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserCreditRepository userCreditRepository;
     private final Environment environment;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, Environment environment) {
+    public UserServiceImpl(UserRepository userRepository, UserCreditRepository userCreditRepository, Environment environment) {
         this.userRepository = userRepository;
+        this.userCreditRepository = userCreditRepository;
         this.environment = environment;
     }
 
@@ -34,11 +38,17 @@ public class UserServiceImpl implements UserService {
     // Find User by ID:
     @Override
     public UserDto findUserById(int id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if(!userOptional.isPresent()) {
-            throw new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString()));
-        }
-        return new UserDto(userOptional.get());
+        return userRepository.findById(id)
+                .map(UserDto::new)
+                .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
+    }
+
+    // Find User by Username:
+    @Override
+    public UserDto findUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(UserDto::new)
+                .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
     }
 
     // Update User by ID:
@@ -54,5 +64,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(int id) {
         findUserById(id);
         userRepository.deleteById(id);
+    }
+
+    // Add Tax Credit to User:
+    @Override
+    public UserCreditDto addTaxCredit(int id, UserCreditDto creditToBeAdded) {
+        User user = findUserById(id).getUser();
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.skillstorm.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.skillstorm.entities.Deduction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class DeductionDto {
         this.rate = deduction.getRate();
     }
 
+    @JsonIgnore
     public Deduction getDeduction() {
         Deduction deduction = new Deduction();
         deduction.setId(this.id);
