@@ -34,7 +34,6 @@ public class UserController {
 
     // Add new User:
     @PostMapping
-    @Secured("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDto> addUser(@Validated(AddUserGroup.class) @RequestBody UserDto newUser) {
         UserDto createdUser = userService.addUser(newUser);
         return ResponseEntity.created(URI.create("/" + createdUser.getId())).body(createdUser);
@@ -42,7 +41,6 @@ public class UserController {
 
     // Find User by ID:
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<UserDto> findUserById(@PathVariable int id) {
         return ResponseEntity.ok(userService.findUserById(id));
     }

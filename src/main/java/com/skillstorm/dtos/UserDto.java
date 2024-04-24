@@ -1,8 +1,10 @@
 package com.skillstorm.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.skillstorm.entities.User;
-import com.skillstorm.entities.W2;
 import com.skillstorm.validations.AddUserGroup;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -13,8 +15,11 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
+// Used to prevent infinite recursion when serializing the UserDto object to JSON:
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class UserDto {
 
     private int id;
@@ -35,6 +40,7 @@ public class UserDto {
 
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NotEmpty(message = "{user.address.must}")
@@ -48,7 +54,7 @@ public class UserDto {
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{4}$", message = "{user.ssn.valid}")
     private String ssn;
 
-    private List<W2> w2s;
+    private List<W2Dto> w2s;
 
     public UserDto() {
         w2s = new ArrayList<>(3);
@@ -65,7 +71,7 @@ public class UserDto {
         this.address = user.getAddress();
         this.phoneNumber = user.getPhoneNumber();
         this.ssn = user.getSsn();
-        this.w2s = user.getW2s();
+        this.w2s = user.getW2s().stream().map(W2Dto::new).collect(Collectors.toList());
     }
 
     @JsonIgnore
@@ -85,7 +91,7 @@ public class UserDto {
         user.setAddress(this.address);
         user.setPhoneNumber(this.phoneNumber);
         user.setSsn(this.ssn);
-        user.setW2s(this.w2s);
+        user.setW2s(this.w2s.stream().map(W2Dto::getW2).collect(Collectors.toList()));
 
         return user;
     }

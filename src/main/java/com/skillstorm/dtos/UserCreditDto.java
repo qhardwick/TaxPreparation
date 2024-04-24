@@ -30,8 +30,6 @@ public class UserCreditDto {
     public UserCredit getUserCredit() {
         UserCredit userCredit = new UserCredit();
         userCredit.setId(this.id);
-        userCredit.setUser(null);
-        userCredit.setCredit(null);
         userCredit.setCreditsClaimed(this.creditsClaimed);
         userCredit.setTotalValue(this.totalValue);
 

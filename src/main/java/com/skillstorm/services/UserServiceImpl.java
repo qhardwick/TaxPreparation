@@ -1,16 +1,20 @@
 package com.skillstorm.services;
 
+import com.skillstorm.dtos.CreditDto;
 import com.skillstorm.dtos.UserCreditDto;
 import com.skillstorm.dtos.UserDto;
 import com.skillstorm.entities.User;
+import com.skillstorm.entities.UserCredit;
 import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.UserCreditRepository;
 import com.skillstorm.repositories.UserRepository;
 import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -20,12 +24,19 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserCreditRepository userCreditRepository;
+    private final RestTemplate restTemplate;
+    private final String creditsUrl;
+    private final String deductionsUrl;
     private final Environment environment;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserCreditRepository userCreditRepository, Environment environment) {
+    public UserServiceImpl(UserRepository userRepository, UserCreditRepository userCreditRepository, RestTemplate restTemplate,
+                           @Value("${credits.url}") String creditsUrl, @Value("${deductionsUrl") String deductionsUrl, Environment environment) {
         this.userRepository = userRepository;
         this.userCreditRepository = userCreditRepository;
+        this.restTemplate = restTemplate;
+        this.creditsUrl = creditsUrl;
+        this.deductionsUrl = deductionsUrl;
         this.environment = environment;
     }
 
@@ -69,7 +80,22 @@ public class UserServiceImpl implements UserService {
     // Add Tax Credit to User:
     @Override
     public UserCreditDto addTaxCredit(int id, UserCreditDto creditToBeAdded) {
+
         User user = findUserById(id).getUser();
-        return null;
+
+        CreditDto creditDto;
+        try {
+            creditDto = restTemplate.getForObject(creditsUrl + "/" + creditToBeAdded.getCreditId(), CreditDto.class);
+        } catch (Exception e) {
+            throw new UserNotFoundException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString()));
+        }
+        creditDto = restTemplate.getForObject(creditsUrl + "/" + creditToBeAdded.getCreditId(), CreditDto.class);
+
+        UserCredit userCredit = creditToBeAdded.getUserCredit();
+        userCredit.setUser(user);
+        userCredit.setCredit(creditDto.getCredit());
+        userCredit.setTotalValue(creditDto.getValue() * creditToBeAdded.getCreditsClaimed());
+
+        return new UserCreditDto(userCreditRepository.saveAndFlush(userCredit));
     }
 }
