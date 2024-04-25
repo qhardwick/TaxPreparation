@@ -1,6 +1,7 @@
 package com.skillstorm.controllers;
 
 import com.skillstorm.dtos.UserCreditDto;
+import com.skillstorm.dtos.UserDeductionDto;
 import com.skillstorm.dtos.UserDto;
 import com.skillstorm.services.UserService;
 import com.skillstorm.validations.AddUserGroup;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -68,6 +70,24 @@ public class UserController {
     @PostMapping("/{id}/credits")
     public ResponseEntity<UserCreditDto> addTaxCredit(@PathVariable int id, @RequestBody UserCreditDto creditToBeAdded) {
         return ResponseEntity.ok(userService.addTaxCredit(id, creditToBeAdded));
+    }
+
+    // Find all UserCredits by User ID:
+    @GetMapping("/{id}/credits")
+    public ResponseEntity<List<UserCreditDto>> findAllCreditsByUserId(@PathVariable int id) {
+        return ResponseEntity.ok(userService.findAllCreditsByUserId(id));
+    }
+
+    // Add Deduction to User:
+    @PostMapping("/{id}/deductions")
+    public ResponseEntity<UserDeductionDto> addDeduction(@PathVariable int id, @RequestBody UserDeductionDto deductionToBeAdded) {
+        return ResponseEntity.ok(userService.addDeduction(id, deductionToBeAdded));
+    }
+
+    // Find all UserDeductions by User ID:
+    @GetMapping("/{id}/deductions")
+    public ResponseEntity<List<UserDeductionDto>> findAllDeductionsByUserId(@PathVariable int id) {
+        return ResponseEntity.ok(userService.findAllDeductionsByUserId(id));
     }
 
 }

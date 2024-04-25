@@ -27,8 +27,8 @@ public class UserDeductionDto {
     public UserDeduction getUserDeduction() {
         UserDeduction userDeduction = new UserDeduction();
         userDeduction.setId(this.id);
-        userDeduction.setUser(null);
-        userDeduction.setDeduction(null);
+        userDeduction.setUserId(this.userId);
+        userDeduction.setDeductionId(this.deductionId);
         userDeduction.setAmountSpent(this.amountSpent);
         userDeduction.setDeductionAmount(this.deductionAmount);
 

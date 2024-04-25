@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,12 @@ public class W2ServiceImpl implements W2Service {
             throw new W2NotFoundException(environment.getProperty(SystemMessages.W2_NOT_FOUND.toString()));
         }
         return new W2Dto(w2Optional.get());
+    }
+
+    // Find all by User ID:
+    @Override
+    public List<W2Dto> findW2ByUserId(int userId) {
+        return w2Repository.findAllByUserId(userId).stream().map(W2Dto::new).toList();
     }
 
     @Override

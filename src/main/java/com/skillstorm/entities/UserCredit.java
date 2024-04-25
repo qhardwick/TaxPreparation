@@ -12,11 +12,17 @@ public class UserCredit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "user_id")
+    private int userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "credit_id")
+    private int creditId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Credit credit;
 

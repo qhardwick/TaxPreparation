@@ -3,6 +3,7 @@ package com.skillstorm.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.skillstorm.entities.UserCredit;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class UserCreditDto {
@@ -30,6 +31,8 @@ public class UserCreditDto {
     public UserCredit getUserCredit() {
         UserCredit userCredit = new UserCredit();
         userCredit.setId(this.id);
+        userCredit.setUserId(this.userId);
+        userCredit.setCreditId(this.creditId);
         userCredit.setCreditsClaimed(this.creditsClaimed);
         userCredit.setTotalValue(this.totalValue);
 

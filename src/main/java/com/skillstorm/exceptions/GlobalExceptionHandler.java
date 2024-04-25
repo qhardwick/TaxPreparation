@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -54,6 +55,16 @@ public class GlobalExceptionHandler {
         errorMessage.setCode(HttpStatus.BAD_REQUEST.value());
         errorMessage.setMessage(e.getConstraintViolations().stream()
                 .map(ConstraintViolation::getMessage).collect(Collectors.joining(", ")));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+    // Handle attempts to add entities with foreign keys referencing non-existent entities
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorMessage> handleDataIntegrityViolationExceptions(DataIntegrityViolationException e) {
+        ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setCode(HttpStatus.BAD_REQUEST.value());
+        errorMessage.setMessage(e.getRootCause().getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }

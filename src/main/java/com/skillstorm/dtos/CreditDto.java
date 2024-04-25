@@ -14,7 +14,6 @@ public class CreditDto {
     private double value;
 
     public CreditDto(Credit credit) {
-        this();
         this.id = credit.getId();
         this.name = credit.getName();
         this.value = credit.getValue();

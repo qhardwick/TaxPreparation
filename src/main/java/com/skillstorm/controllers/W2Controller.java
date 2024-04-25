@@ -3,11 +3,13 @@ package com.skillstorm.controllers;
 import com.skillstorm.dtos.W2Dto;
 import com.skillstorm.services.W2Service;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/w2s")
@@ -37,6 +39,12 @@ public class W2Controller {
     @GetMapping("/{id}")
     public ResponseEntity<W2Dto> findW2ById(@PathVariable int id) {
         return ResponseEntity.ok(w2Service.findW2ById(id));
+    }
+
+    // Find all by User ID:
+    @GetMapping()
+    public ResponseEntity<List<W2Dto>> findW2ByUserId(@PathParam("userId") int userId) {
+        return ResponseEntity.ok(w2Service.findW2ByUserId(userId));
     }
 
     // Update W2 by ID:
