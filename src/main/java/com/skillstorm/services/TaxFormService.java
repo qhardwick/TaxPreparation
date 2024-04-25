@@ -10,6 +10,9 @@ public interface TaxFormService {
     // Find TaxForm by ID:
     TaxFormDto findTaxFormById(int id);
 
+    // Find TaxForm by User ID:
+    TaxFormDto populateTaxFormByUserId(int userId);
+
     // Update TaxForm by ID:
     TaxFormDto updateTaxFormById(int id, TaxFormDto updatedTaxForm);
 

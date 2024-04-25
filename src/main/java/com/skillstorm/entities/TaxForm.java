@@ -34,8 +34,9 @@ public class TaxForm {
     @Column(name = "total_medicare_taxes_withheld")
     private double totalMedicareTaxesWithheld;
 
+    private double credits;
 
-    //private List<Deduction> deductions;
+    private double deductions;
 
     private double refund;
 }

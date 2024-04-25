@@ -46,6 +46,7 @@ public class W2ServiceImpl implements W2Service {
         return w2Repository.findAllByUserId(userId).stream().map(W2Dto::new).toList();
     }
 
+    // Update W2 by ID:
     @Override
     public W2Dto updateW2ById(int id, W2Dto updatedW2) {
         findW2ById(id);
@@ -53,6 +54,7 @@ public class W2ServiceImpl implements W2Service {
         return new W2Dto(w2Repository.saveAndFlush(updatedW2.getW2()));
     }
 
+    // Delete W2 by ID:
     @Override
     public void deleteW2ById(int id) {
         findW2ById(id);

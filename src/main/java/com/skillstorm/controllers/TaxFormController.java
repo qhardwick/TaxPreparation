@@ -3,6 +3,7 @@ package com.skillstorm.controllers;
 import com.skillstorm.dtos.TaxFormDto;
 import com.skillstorm.services.TaxFormService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,12 @@ public class TaxFormController {
     @GetMapping("/{id}")
     public ResponseEntity<TaxFormDto> findTaxFormById(@PathVariable int id) {
         return ResponseEntity.ok(taxFormService.findTaxFormById(id));
+    }
+
+    // Populate TaxForm based on User ID:
+    @GetMapping()
+    public ResponseEntity<TaxFormDto> populateTaxFormByUserId(@PathParam("userId") int userId) {
+        return ResponseEntity.ok(taxFormService.populateTaxFormByUserId(userId));
     }
 
     // Update TaxForm by ID:

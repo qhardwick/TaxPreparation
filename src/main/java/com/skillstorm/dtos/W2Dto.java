@@ -42,7 +42,7 @@ public class W2Dto {
         this.federalTaxesWithheld = w2.getFederalTaxesWithheld();
         this.socialSecurityTaxesWithheld = w2.getSocialSecurityTaxesWithheld();
         this.medicareTaxesWithheld = w2.getMedicareTaxesWithheld();
-        this.userId = w2.getId();
+        this.userId = w2.getUserId();
     }
 
     @JsonIgnore
