@@ -30,7 +30,7 @@ public class LoggingAspect {
 
         // Define our logger to log method calls and their signatures:
         Logger log = LoggerFactory.getLogger(pjp.getTarget().getClass());
-        log.trace("Method with signature: " + pjp.getSignature().getName());
+        log.trace("Method with signature: " + pjp.getTarget().getClass().getSimpleName() + "." + pjp.getSignature().getName() + "()");
         log.trace("With arguments: " + Arrays.toString(pjp.getArgs()));
 
         try {

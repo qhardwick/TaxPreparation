@@ -1,9 +1,6 @@
 package com.skillstorm.services;
 
-import com.skillstorm.dtos.TaxFormDto;
-import com.skillstorm.dtos.UserCreditDto;
-import com.skillstorm.dtos.UserDeductionDto;
-import com.skillstorm.dtos.UserDto;
+import com.skillstorm.dtos.*;
 import com.skillstorm.entities.TaxForm;
 import com.skillstorm.exceptions.TaxFormNotFoundException;
 import com.skillstorm.exceptions.UserNotFoundException;
@@ -51,9 +48,21 @@ public class TaxFormServiceImpl implements TaxFormService {
     }
 
     // Populate the TaxForm based on the User ID:
-    // TODO: Split into multiple smaller methods for better readability:
     @Override
     public TaxFormDto populateTaxFormByUserId(int userId) {
+
+        // Create a new TaxFormDto object:
+        TaxFormDto taxFormDto = new TaxFormDto();
+
+        // Set Wages, Taxes, Credits, and Deductions based on UserDto object:
+        setFinancialData(userId, taxFormDto);
+
+        taxFormDto.setRefund(calculateRefund(taxFormDto));
+        return taxFormDto;
+    }
+
+    // Utility method to update the TaxFormDto object with financial data:
+    private void setFinancialData(int userId, TaxFormDto taxFormDto) {
 
         // Retrieve the UserDto object from the User Service:
         UserDto userDto;
@@ -63,26 +72,26 @@ public class TaxFormServiceImpl implements TaxFormService {
             throw new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString()));
         }
 
-        // Create a new TaxFormDto object:
-        TaxFormDto taxFormDto = new TaxFormDto();
-        taxFormDto.setUser(userDto);
-
-        // Set total wages based on userDto object:
-        double totalWages = userDto.getW2s().stream().map(w2Dto -> w2Dto.getWages()).reduce(0.0, Double::sum);
+        double totalWages = userDto.getW2s().stream().map(W2Dto::getWages).reduce(0.0, Double::sum);
         taxFormDto.setTotalWages(totalWages);
 
-        // Set total federal taxes withheld based on userDto object:
-        double totalFederalTaxesWithheld = userDto.getW2s().stream().map(w2Dto -> w2Dto.getFederalTaxesWithheld()).reduce(0.0, Double::sum);
+        double totalFederalTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getFederalTaxesWithheld).reduce(0.0, Double::sum);
         taxFormDto.setTotalFederalTaxesWithheld(totalFederalTaxesWithheld);
 
-        // Set total social security taxes withheld based on userDto object:
-        double totalSocialSecurityTaxesWithheld = userDto.getW2s().stream().map(w2Dto -> w2Dto.getSocialSecurityTaxesWithheld()).reduce(0.0, Double::sum);
+        double totalSocialSecurityTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getSocialSecurityTaxesWithheld).reduce(0.0, Double::sum);
         taxFormDto.setTotalSocialSecurityTaxesWithheld(totalSocialSecurityTaxesWithheld);
 
-        // Set total medicare taxes withheld based on userDto object:
-        double totalMedicareTaxesWithheld = userDto.getW2s().stream().map(w2Dto -> w2Dto.getMedicareTaxesWithheld()).reduce(0.0, Double::sum);
+        double totalMedicareTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getMedicareTaxesWithheld).reduce(0.0, Double::sum);
         taxFormDto.setTotalMedicareTaxesWithheld(totalMedicareTaxesWithheld);
 
+        setCreditsAndDeductions(userId, taxFormDto);
+
+        // Set the UserDto object in the TaxFormDto object:
+        taxFormDto.setUser(userDto);
+    }
+
+    // Utility method to update the TaxFormDto object with credits and deductions:
+    private void setCreditsAndDeductions(int userId, TaxFormDto taxFormDto) {
         // Set credits based on userDto object:
         UserCreditDto[] userCreditDtoList = restTemplate.getForObject(usersUrl + "/" + userId + "/credits", UserCreditDto[].class);
         double credits = Arrays.stream(userCreditDtoList).map(UserCreditDto::getTotalValue).reduce(0.0, Double::sum);
@@ -92,9 +101,6 @@ public class TaxFormServiceImpl implements TaxFormService {
         UserDeductionDto[] userDeductionDtoList = restTemplate.getForObject(usersUrl + "/" + userId + "/deductions", UserDeductionDto[].class);
         double deductions = Arrays.stream(userDeductionDtoList).map(UserDeductionDto::getDeductionAmount).reduce(0.0, Double::sum);
         taxFormDto.setDeductions(deductions);
-
-        taxFormDto.setRefund(calculateRefund(taxFormDto));
-        return taxFormDto;
     }
 
     // Update TaxForm by ID:
