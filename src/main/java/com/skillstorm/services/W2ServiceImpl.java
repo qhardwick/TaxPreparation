@@ -26,11 +26,13 @@ public class W2ServiceImpl implements W2Service {
         this.environment = environment;
     }
 
+    // Add W2:
     @Override
     public W2Dto addW2(W2Dto newW2) {
         return new W2Dto(w2Repository.saveAndFlush(newW2.getW2()));
     }
 
+    // Find W2 by ID:
     @Override
     public W2Dto findW2ById(int id) {
         Optional<W2> w2Optional = w2Repository.findById(id);

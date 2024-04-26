@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,9 +101,11 @@ public class UserServiceImpl implements UserService {
             throw new CreditNotFoundException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString()));
         }
 
-        // Use the credit to calculate the total value of the UserCredit:
+        // Multiply the value of the credit by the number of credits claimed by the user to get the total value of the UserCredit:
         UserCredit userCredit = userCreditDto.getUserCredit();
-        userCredit.setTotalValue(creditDto.getValue() * userCredit.getCreditsClaimed());
+        BigDecimal totalValue = creditDto.getValue().multiply(BigDecimal.valueOf(userCredit.getCreditsClaimed()));
+        userCredit.setTotalValue(totalValue.setScale(2, RoundingMode.HALF_UP));
+
         userCredit.setUser(user);
         userCredit.setCredit(creditDto.getCredit());
 
@@ -131,7 +135,7 @@ public class UserServiceImpl implements UserService {
 
         // Use the deduction's rate to calculate the total value of the UserDeduction based on the amount spent by the user:
         UserDeduction userDeduction = userDeductionDto.getUserDeduction();
-        userDeduction.setDeductionAmount(userDeduction.getAmountSpent() * deductionDto.getRate());
+        userDeduction.setDeductionAmount(userDeduction.getAmountSpent().multiply(deductionDto.getRate()));
         userDeduction.setUser(user);
         userDeduction.setDeduction(deductionDto.getDeduction());
 

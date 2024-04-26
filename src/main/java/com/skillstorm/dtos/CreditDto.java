@@ -5,13 +5,15 @@ import com.skillstorm.entities.Credit;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 public class CreditDto {
 
     private int id;
     private String name;
-    private double value;
+    private BigDecimal value;
 
     public CreditDto(Credit credit) {
         this.id = credit.getId();

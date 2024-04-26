@@ -5,6 +5,8 @@ import com.skillstorm.entities.UserDeduction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 public class UserDeductionDto {
@@ -12,8 +14,8 @@ public class UserDeductionDto {
     private int id;
     private int userId;
     private int deductionId;
-    private double amountSpent;
-    private double deductionAmount;
+    private BigDecimal amountSpent;
+    private BigDecimal deductionAmount;
 
     public UserDeductionDto(UserDeduction userDeduction) {
         this.id = userDeduction.getId();

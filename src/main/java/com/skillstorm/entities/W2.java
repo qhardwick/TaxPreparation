@@ -3,6 +3,8 @@ package com.skillstorm.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table
@@ -16,13 +18,13 @@ public class W2 {
 
     private int year;
 
-    private double wages;
+    private BigDecimal wages;
 
-    private double federalTaxesWithheld;
+    private BigDecimal federalTaxesWithheld;
 
-    private double socialSecurityTaxesWithheld;
+    private BigDecimal socialSecurityTaxesWithheld;
 
-    private double medicareTaxesWithheld;
+    private BigDecimal medicareTaxesWithheld;
 
     @Column(name = "user_id")
     private int userId;

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 @Service
@@ -72,16 +74,16 @@ public class TaxFormServiceImpl implements TaxFormService {
             throw new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString()));
         }
 
-        double totalWages = userDto.getW2s().stream().map(W2Dto::getWages).reduce(0.0, Double::sum);
+        BigDecimal totalWages = userDto.getW2s().stream().map(W2Dto::getWages).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalWages(totalWages);
 
-        double totalFederalTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getFederalTaxesWithheld).reduce(0.0, Double::sum);
+        BigDecimal totalFederalTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getFederalTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalFederalTaxesWithheld(totalFederalTaxesWithheld);
 
-        double totalSocialSecurityTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getSocialSecurityTaxesWithheld).reduce(0.0, Double::sum);
+        BigDecimal totalSocialSecurityTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getSocialSecurityTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalSocialSecurityTaxesWithheld(totalSocialSecurityTaxesWithheld);
 
-        double totalMedicareTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getMedicareTaxesWithheld).reduce(0.0, Double::sum);
+        BigDecimal totalMedicareTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getMedicareTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalMedicareTaxesWithheld(totalMedicareTaxesWithheld);
 
         setCreditsAndDeductions(userId, taxFormDto);
@@ -94,12 +96,12 @@ public class TaxFormServiceImpl implements TaxFormService {
     private void setCreditsAndDeductions(int userId, TaxFormDto taxFormDto) {
         // Set credits based on userDto object:
         UserCreditDto[] userCreditDtoList = restTemplate.getForObject(usersUrl + "/" + userId + "/credits", UserCreditDto[].class);
-        double credits = Arrays.stream(userCreditDtoList).map(UserCreditDto::getTotalValue).reduce(0.0, Double::sum);
+        BigDecimal credits = Arrays.stream(userCreditDtoList).map(UserCreditDto::getTotalValue).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setCredits(credits);
 
         // Set deductions based on userDto object:
         UserDeductionDto[] userDeductionDtoList = restTemplate.getForObject(usersUrl + "/" + userId + "/deductions", UserDeductionDto[].class);
-        double deductions = Arrays.stream(userDeductionDtoList).map(UserDeductionDto::getDeductionAmount).reduce(0.0, Double::sum);
+        BigDecimal deductions = Arrays.stream(userDeductionDtoList).map(UserDeductionDto::getDeductionAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setDeductions(deductions);
     }
 
@@ -119,64 +121,97 @@ public class TaxFormServiceImpl implements TaxFormService {
     }
 
     // Calculate federal income taxes owed:
-    private double calculateFederalTaxesOwed(double totalWages) {
-        if(totalWages <= 9875) {
-            return totalWages * 0.1;
-        }
-        if(totalWages <= 40125) {
-            return 987.5 + (totalWages - 9875) * 0.12;
-        }
-        if(totalWages <= 85525) {
-            return 4617.5 + (totalWages - 40125) * 0.22;
-        }
-        if(totalWages <= 163300) {
-            return 14605.5 + (totalWages - 85525) * 0.24;
-        }
-        if(totalWages <= 207350) {
-            return 33271 + (totalWages - 163300) * 0.32;
-        }
-        if(totalWages <= 518400) {
-            return 47367 + (totalWages - 207350) * 0.35;
+    private BigDecimal calculateFederalTaxesOwed(BigDecimal totalWages) {
+
+        // If total wages are less than $9,875, the tax rate is 10%:
+        if (totalWages.compareTo(new BigDecimal("9875")) != 1) {
+            return totalWages.multiply(new BigDecimal("0.1"));
         }
 
-        return 156235 + (totalWages - 518400) * 0.37;
+        // If total wages are less than $40,125, the tax rate is 987.50 + 12%:
+        if (totalWages.compareTo(new BigDecimal("40125")) != 1) {
+            return new BigDecimal("987.5")
+                    .add((totalWages.subtract(new BigDecimal("9875")))
+                            .multiply(new BigDecimal("0.12")));
+        }
+
+        // If total wages are less than $85,525, the tax rate is 4,617.50 + 22%:
+        if (totalWages.compareTo(new BigDecimal("85525")) != 1) {
+            return new BigDecimal("4617.5")
+                    .add((totalWages
+                            .subtract(new BigDecimal("40125")))
+                            .multiply(new BigDecimal("0.22")));
+        }
+        // If total wages are less than $163,300, the tax rate is 14,605.50 + 24%:
+        if (totalWages.compareTo(new BigDecimal("163300")) != 1) {
+            return new BigDecimal("14605.5")
+                    .add((totalWages
+                            .subtract(new BigDecimal("85525")))
+                            .multiply(new BigDecimal("0.24")));
+        }
+
+        // If total wages are less than $207,350, the tax rate is 33,271 + 32%:
+        if (totalWages.compareTo(new BigDecimal("207350")) != 1) {
+            return new BigDecimal("33271")
+                    .add((totalWages
+                            .subtract(new BigDecimal("163300")))
+                            .multiply(new BigDecimal("0.32")));
+        }
+
+        // If total wages are less than $518,400, the tax rate is 47,367 + 35%:
+        if (totalWages.compareTo(new BigDecimal("518400")) != 1) {
+            return new BigDecimal("47367")
+                    .add((totalWages
+                            .subtract(new BigDecimal("207350")))
+                            .multiply(new BigDecimal("0.35")));
+        }
+
+        // If total wages are greater than $518,400, the tax rate is 156,235 + 37%:
+        return new BigDecimal("156235")
+                .add((totalWages
+                        .subtract(new BigDecimal("518400")))
+                        .multiply(new BigDecimal("0.37")));
     }
 
     // Calculate social security taxes owed:
-    private double calculateSocialSecurityTaxesOwed(double totalWages) {
-        return totalWages * 0.062;
+    private BigDecimal calculateSocialSecurityTaxesOwed(BigDecimal totalWages) {
+        return totalWages.multiply(BigDecimal.valueOf(0.062));
     }
 
     // Calculate medicare taxes owed:
-    private double calculateMedicareTaxesOwed(double totalWages) {
-        return totalWages * 0.0145;
+    private BigDecimal calculateMedicareTaxesOwed(BigDecimal totalWages) {
+        return totalWages.multiply(BigDecimal.valueOf(0.0145));
     }
 
     // Calculate total taxes owed:
-    private double calculateTotalTaxesOwed(double totalWages) {
-        return calculateFederalTaxesOwed(totalWages) + calculateSocialSecurityTaxesOwed(totalWages) + calculateMedicareTaxesOwed(totalWages);
+    private BigDecimal calculateTotalTaxesOwed(BigDecimal totalWages) {
+        return calculateFederalTaxesOwed(totalWages)
+                .add(calculateSocialSecurityTaxesOwed(totalWages))
+                .add(calculateMedicareTaxesOwed(totalWages));
     }
 
     // Calculate Refund:
-    private double calculateRefund(TaxFormDto taxForm) {
+    private BigDecimal calculateRefund(TaxFormDto taxForm) {
 
         // Combined taxes owed based on total wages. Not accounting for taxes already withheld, deductions, or credits:
-        double taxesOwed = calculateTotalTaxesOwed(taxForm.getTotalWages());
+        BigDecimal taxesOwed = calculateTotalTaxesOwed(taxForm.getTotalWages());
 
         // Taxes already withheld:
-        double taxesPaid = taxForm.getTotalFederalTaxesWithheld() + taxForm.getTotalSocialSecurityTaxesWithheld()
-                + taxForm.getTotalMedicareTaxesWithheld();
+        BigDecimal taxesPaid = taxForm.getTotalFederalTaxesWithheld()
+                .add(taxForm.getTotalSocialSecurityTaxesWithheld())
+                .add(taxForm.getTotalMedicareTaxesWithheld());
 
         // Total Deductions:
-        double deductions = taxForm.getDeductions();
+        BigDecimal deductions = taxForm.getDeductions();
 
         // Taxes owed after deductions. Deductions cannot reduce taxes owed below 0:
-        double taxesOwedAfterDeductions = deductions > taxesOwed ? 0 : taxesOwed - deductions;
+        BigDecimal taxesOwedAfterDeductions = (deductions.compareTo(taxesOwed) > 0) ? BigDecimal.ZERO
+                : taxesOwed.subtract(deductions);
 
         // Total Credits:
-        double credits = taxForm.getCredits();
+        BigDecimal credits = taxForm.getCredits();
 
-        return taxesPaid + credits - taxesOwedAfterDeductions;
+        return taxesPaid.add(credits).subtract(taxesOwedAfterDeductions).setScale(2, RoundingMode.HALF_UP);
     }
 
 }

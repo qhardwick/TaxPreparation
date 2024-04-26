@@ -5,6 +5,8 @@ import com.skillstorm.entities.UserCredit;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 public class UserCreditDto {
 
@@ -12,7 +14,7 @@ public class UserCreditDto {
     private int userId;
     private int creditId;
     private int creditsClaimed;
-    private double totalValue;
+    private BigDecimal totalValue;
 
     public UserCreditDto() {
         // Default value is one so that Tax Credits that can only be claimed once don't need to set the value.

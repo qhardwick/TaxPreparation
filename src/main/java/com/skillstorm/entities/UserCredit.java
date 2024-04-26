@@ -3,6 +3,8 @@ package com.skillstorm.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "user_credits")
@@ -30,6 +32,6 @@ public class UserCredit {
     private int creditsClaimed;
 
     @Column(name = "total_value")
-    private double totalValue;
+    private BigDecimal totalValue;
 
 }

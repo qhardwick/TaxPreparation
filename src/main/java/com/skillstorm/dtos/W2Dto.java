@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 public class W2Dto {
@@ -20,16 +22,16 @@ public class W2Dto {
     private int year;
 
     @Min(value = 0, message = "{w2.wages.min}")
-    private double wages;
+    private BigDecimal wages;
 
     @Min(value = 0, message = "{w2.federalTaxesWithheld.min}")
-    private double federalTaxesWithheld;
+    private BigDecimal federalTaxesWithheld;
 
     @Min(value = 0, message = "{w2.socialSecurityTaxesWithheld.min}")
-    private double socialSecurityTaxesWithheld;
+    private BigDecimal socialSecurityTaxesWithheld;
 
     @Min(value = 0, message = "{w2.medicareTaxesWithheld.min}")
-    private double medicareTaxesWithheld;
+    private BigDecimal medicareTaxesWithheld;
 
     @Min(value = 1, message = "{w2.userId.min}")
     private int userId;

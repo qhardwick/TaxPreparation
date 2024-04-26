@@ -3,6 +3,8 @@ package com.skillstorm.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "deductions")
@@ -14,5 +16,5 @@ public class Deduction {
     private String name;
 
     @Column(name = "deduction_rate")
-    private double rate;
+    private BigDecimal rate;
 }

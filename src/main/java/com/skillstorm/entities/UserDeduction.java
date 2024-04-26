@@ -3,6 +3,8 @@ package com.skillstorm.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "user_deductions")
@@ -27,8 +29,8 @@ public class UserDeduction {
     private Deduction deduction;
 
     @Column(name = "amount_spent")
-    private double amountSpent;
+    private BigDecimal amountSpent;
 
     @Column(name = "deduction_amount")
-    private double deductionAmount;
+    private BigDecimal deductionAmount;
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -23,20 +24,20 @@ public class TaxForm {
     private int year;
 
     @Column(name = "total_wages")
-    private double totalWages;
+    private BigDecimal totalWages;
 
     @Column(name = "total_federal_taxes_withheld")
-    private double totalFederalTaxesWithheld;
+    private BigDecimal totalFederalTaxesWithheld;
 
     @Column(name = "total_social_security_taxes_withheld")
-    private double totalSocialSecurityTaxesWithheld;
+    private BigDecimal totalSocialSecurityTaxesWithheld;
 
     @Column(name = "total_medicare_taxes_withheld")
-    private double totalMedicareTaxesWithheld;
+    private BigDecimal totalMedicareTaxesWithheld;
 
-    private double credits;
+    private BigDecimal credits;
 
-    private double deductions;
+    private BigDecimal deductions;
 
-    private double refund;
+    private BigDecimal refund;
 }

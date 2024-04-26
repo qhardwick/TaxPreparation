@@ -1,5 +1,9 @@
 FROM openjdk:17-alpine
 
+RUN apk update
+
+RUN apk upgrade
+
 WORKDIR /app
 
 COPY target/TaxStorm-0.0.1-SNAPSHOT.jar /app/TaxStorm.jar

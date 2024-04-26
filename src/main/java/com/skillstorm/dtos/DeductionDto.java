@@ -5,13 +5,15 @@ import com.skillstorm.entities.Deduction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 public class DeductionDto {
 
     private int id;
     private String name;
-    private double rate;
+    private BigDecimal rate;
 
     public DeductionDto(Deduction deduction) {
         this.id = deduction.getId();

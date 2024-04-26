@@ -5,6 +5,8 @@ import com.skillstorm.entities.TaxForm;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 public class TaxFormDto {
@@ -15,19 +17,19 @@ public class TaxFormDto {
 
     private int year;
 
-    private double totalWages;
+    private BigDecimal totalWages;
 
-    private double totalFederalTaxesWithheld;
+    private BigDecimal totalFederalTaxesWithheld;
 
-    private double totalSocialSecurityTaxesWithheld;
+    private BigDecimal totalSocialSecurityTaxesWithheld;
 
-    private double totalMedicareTaxesWithheld;
+    private BigDecimal totalMedicareTaxesWithheld;
 
-    private double credits;
+    private BigDecimal credits;
 
-    private double deductions;
+    private BigDecimal deductions;
 
-    private double refund;
+    private BigDecimal refund;
 
     public TaxFormDto(TaxForm taxForm) {
         this.id = taxForm.getId();

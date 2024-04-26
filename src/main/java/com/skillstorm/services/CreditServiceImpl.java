@@ -36,11 +36,8 @@ public class CreditServiceImpl implements CreditService {
     // Get Credit By Id:
     @Override
     public CreditDto findCreditById(int id) {
-        Optional<Credit> creditOptional = creditRepository.findById(id);
-        if(!creditOptional.isPresent()) {
-            throw new CreditNotFoundException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString()));
-        }
-        return new CreditDto(creditOptional.get());
+        return new CreditDto(creditRepository.findById(id)
+                .orElseThrow(() -> new CreditNotFoundException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString()))));
     }
 
     // Get All Credits:
