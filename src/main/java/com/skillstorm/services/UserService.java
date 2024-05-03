@@ -14,11 +14,11 @@ public interface UserService {
     // Find User by ID:
     UserDto findUserById(int id);
 
-    // Find User by Username:
-    UserDto findUserByUsername(String username);
-
     // Update User by ID:
     UserDto updateUserById(int id, UserDto updatedUser);
+
+    // Update Password by ID:
+    void updatePasswordById(int id, UserDto updatedPassword);
 
     // Delete User by ID:
     void deleteUserById(int id);

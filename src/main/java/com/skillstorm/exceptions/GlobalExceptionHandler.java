@@ -9,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -67,5 +68,15 @@ public class GlobalExceptionHandler {
         errorMessage.setMessage(e.getRootCause().getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+    // Handle 403 Forbidden from trying to access entities that do not belong to the authenticated user:
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessage> handleAccessDeniedExceptions(AccessDeniedException e) {
+        ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setCode(HttpStatus.FORBIDDEN.value());
+        errorMessage.setMessage(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorMessage);
     }
 }

@@ -3,11 +3,10 @@ package com.skillstorm.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -27,7 +26,9 @@ public class User implements UserDetails {
     @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "username", unique = true)
     private String username;
+
 
     private String password;
 
@@ -42,32 +43,39 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<W2> w2s;
 
+    private String role;
+
     public User() {
         this.w2s = new ArrayList<>(3);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+        authorities.add(authority);
+
+        return authorities;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

@@ -1,7 +1,6 @@
 package com.skillstorm.services;
 
 import com.skillstorm.dtos.*;
-import com.skillstorm.entities.Credit;
 import com.skillstorm.entities.User;
 import com.skillstorm.entities.UserCredit;
 import com.skillstorm.entities.UserDeduction;
@@ -16,6 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -23,26 +27,27 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @PropertySource("classpath:SystemMessages.properties")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserCreditRepository userCreditRepository;
     private final UserDeductionRepository userDeductionRepository;
+    private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
     private final String creditsUrl;
     private final String deductionsUrl;
     private final Environment environment;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserCreditRepository userCreditRepository, UserDeductionRepository userDeductionRepository, RestTemplate restTemplate,
-                           @Value("${credits.url}") String creditsUrl, @Value("${deductions.url}") String deductionsUrl, Environment environment) {
+    public UserServiceImpl (UserRepository userRepository, UserCreditRepository userCreditRepository, UserDeductionRepository userDeductionRepository, PasswordEncoder passwordEncoder,
+                           RestTemplate restTemplate, @Value("${credits.url}") String creditsUrl, @Value("${deductions.url}") String deductionsUrl, Environment environment){
         this.userRepository = userRepository;
         this.userCreditRepository = userCreditRepository;
         this.userDeductionRepository = userDeductionRepository;
+        this.passwordEncoder = passwordEncoder;
         this.restTemplate = restTemplate;
         this.creditsUrl = creditsUrl;
         this.deductionsUrl = deductionsUrl;
@@ -51,8 +56,16 @@ public class UserServiceImpl implements UserService {
 
     // Add new User:
     @Override
-    public UserDto addUser(UserDto newUser) {
-        return new UserDto(userRepository.saveAndFlush(newUser.getUser()));
+    public UserDto addUser(UserDto newUserDto) {
+        User newUser = newUserDto.getUser();
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.setRole("USER");
+
+        try {
+            return new UserDto(userRepository.saveAndFlush(newUser));
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(environment.getProperty(SystemMessages.USER_ALREADY_EXISTS.toString()));
+        }
     }
 
     // Find User by ID:
@@ -63,20 +76,37 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
     }
 
-    // Find User by Username:
+    // Load User by Username (for Spring Security):
     @Override
-    public UserDto findUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .map(UserDto::new)
-                .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+       return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
     }
 
     // Update User by ID:
     @Override
     public UserDto updateUserById(int id, UserDto updatedUser) {
-        findUserById(id);
-        updatedUser.setId(id);
-        return new UserDto(userRepository.saveAndFlush(updatedUser.getUser()));
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
+
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setAddress(updatedUser.getAddress());
+        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        existingUser.setSsn(updatedUser.getSsn());
+
+        return new UserDto(userRepository.saveAndFlush(existingUser));
+    }
+
+    // Update Password by ID:
+    @Override
+    public void updatePasswordById(int id, UserDto updatedPassword) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
+
+        existingUser.setPassword(passwordEncoder.encode(updatedPassword.getPassword()));
     }
 
     // Delete User by ID:

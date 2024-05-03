@@ -4,6 +4,7 @@ import com.skillstorm.dtos.DeductionDto;
 import com.skillstorm.services.DeductionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +20,9 @@ public class DeductionController {
         this.deductionService = deductionService;
     }
 
-    // Test Endpoint:
-    @RequestMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello");
-    }
-
     // Add new Deduction:
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<DeductionDto> addDeduction(@RequestBody DeductionDto newDeduction) {
         return ResponseEntity.ok(deductionService.addDeduction(newDeduction));
     }
@@ -45,12 +41,14 @@ public class DeductionController {
 
     // Update Deduction by ID:
     @PutMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<DeductionDto> updateDeductionById(@PathVariable int id, @RequestBody DeductionDto updatedDeduction) {
         return ResponseEntity.ok(deductionService.updateDeductionById(id, updatedDeduction));
     }
 
     // Delete Deduction by ID:
     @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Void> deleteDeductionById(@PathVariable int id) {
         deductionService.deleteDeductionById(id);
         return ResponseEntity.noContent().build();

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,14 +23,9 @@ public class W2Controller {
         this.w2Service = w2Service;
     }
 
-    // Test Endpoint:
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello");
-    }
-
     // Add new W2:
     @PostMapping
+    @PreAuthorize("#newW2.userId == authentication.principal.id")
     public ResponseEntity<W2Dto> addW2(@Valid @RequestBody W2Dto newW2) {
         W2Dto createdW2 = w2Service.addW2(newW2);
         return ResponseEntity.created(URI.create("/" + createdW2.getId())).body(createdW2);
@@ -43,12 +39,14 @@ public class W2Controller {
 
     // Find all by User ID:
     @GetMapping()
+    @PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<List<W2Dto>> findW2ByUserId(@PathParam("userId") int userId) {
         return ResponseEntity.ok(w2Service.findW2ByUserId(userId));
     }
 
     // Update W2 by ID:
     @PutMapping("/{id}")
+    @PreAuthorize("#updatedW2.userId == authentication.principal.id")
     public ResponseEntity<W2Dto> updateW2ById(@PathVariable int id, @Valid @RequestBody W2Dto updatedW2) {
         return ResponseEntity.ok(w2Service.updateW2ById(id, updatedW2));
     }

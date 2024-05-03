@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,6 +34,7 @@ public class UserServiceTest {
     @Mock private static UserRepository userRepository;
     @Mock private static UserCreditRepository userCreditRepository;
     @Mock private static UserDeductionRepository userDeductionRepository;
+    @Spy private PasswordEncoder passwordEncoder;
     @Mock private static RestTemplate restTemplate;
     private static String creditsUrl;
     private static String deductionsUrl;
@@ -43,7 +45,7 @@ public class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        userService = new UserServiceImpl(userRepository, userCreditRepository, userDeductionRepository, restTemplate, creditsUrl, deductionsUrl, environment);
+        userService = new UserServiceImpl(userRepository, userCreditRepository, userDeductionRepository, passwordEncoder, restTemplate, creditsUrl, deductionsUrl, environment);
         ReflectionTestUtils.setField(userService, "creditsUrl", "http://localhost:8080/taxstorm/credits");
         ReflectionTestUtils.setField(userService, "deductionsUrl", "http://localhost:8080/taxstorm/deductions");
 

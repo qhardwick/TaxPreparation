@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -19,12 +20,6 @@ public class TaxFormController {
     @Autowired
     public TaxFormController(TaxFormService taxFormService) {
         this.taxFormService = taxFormService;
-    }
-
-    // Test Endpoint:
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello");
     }
 
     // Add new TaxForm:
@@ -42,6 +37,7 @@ public class TaxFormController {
 
     // Populate TaxForm based on User ID:
     @GetMapping()
+    @PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<TaxFormDto> populateTaxFormByUserId(@PathParam("userId") int userId) {
         return ResponseEntity.ok(taxFormService.populateTaxFormByUserId(userId));
     }

@@ -33,5 +33,19 @@ public class W2 {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
+
+    @Override
+    public String toString() {
+        return "W2{" +
+                "id=" + id +
+                ", employer='" + employer + '\'' +
+                ", year=" + year +
+                ", wages=" + wages +
+                ", federalTaxesWithheld=" + federalTaxesWithheld +
+                ", socialSecurityTaxesWithheld=" + socialSecurityTaxesWithheld +
+                ", medicareTaxesWithheld=" + medicareTaxesWithheld +
+                ", userId=" + userId +
+                '}';
+    }
 }
 

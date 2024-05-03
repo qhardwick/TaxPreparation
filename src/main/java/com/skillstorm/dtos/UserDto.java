@@ -56,6 +56,8 @@ public class UserDto {
 
     private List<W2Dto> w2s;
 
+    private String role;
+
     public UserDto() {
         w2s = new ArrayList<>(3);
     }
@@ -67,7 +69,6 @@ public class UserDto {
         this.lastName = user.getLastName();
         this.email = user.getEmail();
         this.username = user.getUsername();
-        this.password = user.getPassword();
         this.address = user.getAddress();
         this.phoneNumber = user.getPhoneNumber();
         this.ssn = user.getSsn();

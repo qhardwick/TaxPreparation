@@ -1,8 +1,7 @@
 FROM openjdk:17-alpine
 
-RUN apk update
-
-RUN apk upgrade
+RUN apk update && \
+    apk upgrade
 
 WORKDIR /app
 

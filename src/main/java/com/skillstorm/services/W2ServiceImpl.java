@@ -8,6 +8,8 @@ import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public class W2ServiceImpl implements W2Service {
 
     // Find W2 by ID:
     @Override
+    @PostAuthorize("returnObject.userId == authentication.principal.id")
     public W2Dto findW2ById(int id) {
         Optional<W2> w2Optional = w2Repository.findById(id);
         if(!w2Optional.isPresent()) {
@@ -57,9 +60,10 @@ public class W2ServiceImpl implements W2Service {
     }
 
     // Delete W2 by ID:
+    //TODO: Implement a check to ensure that the user deleting the W2 is the same user that created it.
     @Override
+    //@PreAuthorize("@w2Repository.findById(#id).map(w2 -> w2.getUserId()).orElseThrow(() -> new com.skillstorm.exceptions.W2NotFoundException(environment.getProperty('w2.not.found'))) == authentication.principal.id")
     public void deleteW2ById(int id) {
-        findW2ById(id);
         w2Repository.deleteById(id);
     }
 }
