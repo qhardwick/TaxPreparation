@@ -60,7 +60,7 @@ public class TaxFormServiceImpl implements TaxFormService {
         setFinancialData(userId, taxFormDto);
 
         taxFormDto.setRefund(calculateRefund(taxFormDto));
-        return taxFormDto;
+        return addTaxForm(taxFormDto);
     }
 
     // Utility method to update the TaxFormDto object with financial data:

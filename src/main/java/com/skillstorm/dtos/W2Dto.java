@@ -36,6 +36,8 @@ public class W2Dto {
     @Min(value = 1, message = "{w2.userId.min}")
     private int userId;
 
+    private String imageKey;
+
     public W2Dto(W2 w2) {
         this.id = w2.getId();
         this.employer = w2.getEmployer();
@@ -45,6 +47,7 @@ public class W2Dto {
         this.socialSecurityTaxesWithheld = w2.getSocialSecurityTaxesWithheld();
         this.medicareTaxesWithheld = w2.getMedicareTaxesWithheld();
         this.userId = w2.getUserId();
+        this.imageKey = w2.getImageKey();
     }
 
     @JsonIgnore
@@ -58,6 +61,7 @@ public class W2Dto {
         w2.setSocialSecurityTaxesWithheld(this.socialSecurityTaxesWithheld);
         w2.setMedicareTaxesWithheld(this.medicareTaxesWithheld);
         w2.setUserId(this.getUserId());
+        w2.setImageKey(this.imageKey);
 
         return w2;
     }

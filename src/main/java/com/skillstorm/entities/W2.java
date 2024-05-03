@@ -34,6 +34,8 @@ public class W2 {
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
+    private String imageKey;
+
     @Override
     public String toString() {
         return "W2{" +
@@ -45,7 +47,8 @@ public class W2 {
                 ", socialSecurityTaxesWithheld=" + socialSecurityTaxesWithheld +
                 ", medicareTaxesWithheld=" + medicareTaxesWithheld +
                 ", userId=" + userId +
-                '}';
+                ", imageKey=" + imageKey +
+                "}";
     }
 }
 

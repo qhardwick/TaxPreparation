@@ -59,7 +59,8 @@ public class UserDto {
     private String role;
 
     public UserDto() {
-        w2s = new ArrayList<>(3);
+                w2s = new ArrayList<>(3);
+                role = "USER";
     }
 
     public UserDto(User user) {
@@ -73,6 +74,7 @@ public class UserDto {
         this.phoneNumber = user.getPhoneNumber();
         this.ssn = user.getSsn();
         this.w2s = user.getW2s().stream().map(W2Dto::new).collect(Collectors.toList());
+        this.role = user.getRole();
     }
 
     @JsonIgnore
@@ -93,6 +95,7 @@ public class UserDto {
         user.setPhoneNumber(this.phoneNumber);
         user.setSsn(this.ssn);
         user.setW2s(this.w2s.stream().map(W2Dto::getW2).collect(Collectors.toList()));
+        user.setRole(this.role);
 
         return user;
     }

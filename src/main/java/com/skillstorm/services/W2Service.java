@@ -2,6 +2,7 @@ package com.skillstorm.services;
 
 import com.skillstorm.dtos.W2Dto;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface W2Service {
@@ -20,4 +21,10 @@ public interface W2Service {
 
     // Delete W2 by ID:
     void deleteW2ById(int id);
+
+    // Upload W2 Image:
+    void uploadW2Image(int id, byte[] image, String contentType);
+
+    // Download W2 Image:
+    InputStream downloadW2Image(int id);
 }

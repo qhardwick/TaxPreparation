@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
@@ -52,9 +53,23 @@ public class W2Controller {
     }
 
     // Delete W2 by ID:
+    //TODO: Implement a check to ensure that the user deleting the W2 is the same user that created it.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteW2ById(@PathVariable int id) {
         w2Service.deleteW2ById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Upload image of W2:
+    @PostMapping("/{id}/image")
+    public ResponseEntity<Void> uploadW2Image(@PathVariable int id, @RequestBody byte[] image, @RequestHeader("Content-Type") String contentType) {
+        w2Service.uploadW2Image(id, image, contentType);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Download image of W2:
+    @GetMapping("/{id}/image")
+    public ResponseEntity<InputStream> downloadW2Image(@PathVariable int id) {
+        return ResponseEntity.ok(w2Service.downloadW2Image(id));
     }
 }

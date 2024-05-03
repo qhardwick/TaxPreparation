@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +20,13 @@ import java.util.Optional;
 public class W2ServiceImpl implements W2Service {
 
     private final W2Repository w2Repository;
+    private final S3Service s3Service;
     private final Environment environment;
 
     @Autowired
-    public W2ServiceImpl(W2Repository w2Repository, Environment environment) {
+    public W2ServiceImpl(W2Repository w2Repository, S3Service s3Service, Environment environment) {
         this.w2Repository = w2Repository;
+        this.s3Service = s3Service;
         this.environment = environment;
     }
 
@@ -60,10 +62,23 @@ public class W2ServiceImpl implements W2Service {
     }
 
     // Delete W2 by ID:
-    //TODO: Implement a check to ensure that the user deleting the W2 is the same user that created it.
     @Override
-    //@PreAuthorize("@w2Repository.findById(#id).map(w2 -> w2.getUserId()).orElseThrow(() -> new com.skillstorm.exceptions.W2NotFoundException(environment.getProperty('w2.not.found'))) == authentication.principal.id")
     public void deleteW2ById(int id) {
         w2Repository.deleteById(id);
+    }
+
+    // Upload W2 Image:
+    @Override
+    public void uploadW2Image(int id, byte[] image, String contentType) {
+        W2 w2 = findW2ById(id).getW2();
+        String key = "w2s/" + w2.getUserId() + "/" + w2.getId() + "." + contentType.split("/")[1];
+        s3Service.uploadFile(key, image);
+    }
+
+    // Download W2 Image:
+    @Override
+    public InputStream downloadW2Image(int id) {
+        W2Dto w2 = findW2ById(id);
+        return s3Service.getObject(w2.getImageKey());
     }
 }
