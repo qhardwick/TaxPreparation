@@ -4,6 +4,7 @@ import com.skillstorm.dtos.W2Dto;
 import com.skillstorm.entities.W2;
 import com.skillstorm.exceptions.W2NotFoundException;
 import com.skillstorm.repositories.W2Repository;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,19 +14,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class W2ServiceTest {
 
     @InjectMocks private static W2ServiceImpl w2Service;
+    @Mock private static S3Service s3Service;
     @Mock private static W2Repository w2Repository;
     @Mock private static Environment environment;
 
@@ -35,7 +39,7 @@ public class W2ServiceTest {
     @BeforeEach
     public void setUp() {
 
-        w2Service = new W2ServiceImpl(w2Repository, environment);
+        w2Service = new W2ServiceImpl(w2Repository, s3Service, environment);
 
         w2Dto = new W2Dto();
         w2Dto.setEmployer("Test Employer");
@@ -176,5 +180,63 @@ public class W2ServiceTest {
 
         //Verify the result:
         assertEquals(1, idCaptor.getValue(), "W2 ID should be 1");
+    }
+
+    // Upload W2 Image:
+    @Test
+    public void uploadW2ImageTest() {
+
+        //Define stubbing:
+        when(w2Repository.findById(1)).thenReturn(Optional.of(w2));
+
+        // Define ArgumentCaptors:
+        ArgumentCaptor<String> keyCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<byte[]> imageCaptor = ArgumentCaptor.forClass(byte[].class);
+        ArgumentCaptor<W2> w2Captor = ArgumentCaptor.forClass(W2.class);
+
+        //Call the method to test:
+        byte[] image = {0};
+        w2Service.uploadW2Image(1, image, "image/png");
+
+        //Verify the method was called:
+        verify(s3Service).uploadFile(keyCaptor.capture(), imageCaptor.capture());
+        verify(w2Repository).saveAndFlush(w2Captor.capture());
+
+        // The w2Captor should capture the W2 object with the updated image key getting sent to the database:
+        W2 result = w2Captor.getValue();
+
+        //Verify the result:
+        assertEquals("w2s/1/1.png", keyCaptor.getValue(), "Key should be 'w2s/1/1.png'");
+        assertArrayEquals(new byte[]{0}, imageCaptor.getValue(), "Image should be a byte array");
+        assertEquals(1, result.getId(), "W2 ID should be 1");
+        assertEquals("Test Employer", result.getEmployer(), "Employer should be 'Test Employer'");
+        assertEquals(2024, result.getYear(), "Year should be 2024");
+        assertEquals(BigDecimal.valueOf(1000.00), result.getWages(), "Wages should be 1000.00");
+        assertEquals(BigDecimal.valueOf(300.00), result.getFederalTaxesWithheld(), "Federal Taxes Withheld should be 300.00");
+        assertEquals(BigDecimal.valueOf(200.00), result.getSocialSecurityTaxesWithheld(), "Social Security Taxes Withheld should be 200.00");
+        assertEquals(BigDecimal.valueOf(100.00), result.getMedicareTaxesWithheld(), "Medicare Taxes Withheld should be 100.00");
+        assertEquals(1, result.getUserId(), "User ID should be 1");
+        assertEquals("w2s/1/1.png", result.getImageKey(), "Image Key should be 'w2s/1/1.png'");
+    }
+
+    // Download W2 Image Success:
+    @Test
+    @SneakyThrows
+    public void testDownloadW2ImageSuccess() {
+
+        byte[] imageBytes = {1, 2, 3};
+        Resource resource = new ByteArrayResource(imageBytes);
+        w2.setImageKey("w2s/1/1.png");
+
+        //Define stubbing:
+        when(w2Repository.findById(1)).thenReturn(Optional.of(w2));
+        when(s3Service.getObject("w2s/1/1.png")).thenReturn(resource.getInputStream());
+
+        //Call the method to test:
+        Resource result = w2Service.downloadW2Image(1);
+
+        //Verify the result:
+        verify(s3Service).getObject("w2s/1/1.png");
+        assertArrayEquals(new byte[]{1,2,3}, result.getContentAsByteArray(), "Should return byte array {1,2,3}");
     }
 }

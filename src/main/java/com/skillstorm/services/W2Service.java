@@ -1,8 +1,8 @@
 package com.skillstorm.services;
 
 import com.skillstorm.dtos.W2Dto;
+import org.springframework.core.io.Resource;
 
-import java.io.InputStream;
 import java.util.List;
 
 public interface W2Service {
@@ -26,5 +26,5 @@ public interface W2Service {
     void uploadW2Image(int id, byte[] image, String contentType);
 
     // Download W2 Image:
-    InputStream downloadW2Image(int id);
+    Resource downloadW2Image(int id);
 }

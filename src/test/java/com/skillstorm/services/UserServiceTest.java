@@ -73,7 +73,7 @@ public class UserServiceTest {
     }
 
     // Add new User:
-    //@Test
+    @Test
     public void addUserTest() {
 
         // Define Stubbing:

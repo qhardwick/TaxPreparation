@@ -4,6 +4,7 @@ import com.skillstorm.dtos.*;
 import com.skillstorm.entities.TaxForm;
 import com.skillstorm.exceptions.TaxFormNotFoundException;
 import com.skillstorm.exceptions.UserNotFoundException;
+import com.skillstorm.repositories.TaxFormArchiveRepository;
 import com.skillstorm.repositories.TaxFormRepository;
 import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,15 @@ import java.util.Arrays;
 public class TaxFormServiceImpl implements TaxFormService {
 
     private final TaxFormRepository taxFormRepository;
+    private final TaxFormArchiveRepository taxFormArchiveRepository;
     private final RestTemplate restTemplate;
     private final String usersUrl;
     private final Environment environment;
 
     @Autowired
-    public TaxFormServiceImpl(TaxFormRepository taxFormRepository, RestTemplate restTemplate, @Value("${users.url}") String usersUrl, Environment environment) {
+    public TaxFormServiceImpl(TaxFormRepository taxFormRepository, TaxFormArchiveRepository taxFormArchiveRepository, RestTemplate restTemplate, @Value("${users.url}") String usersUrl, Environment environment) {
         this.taxFormRepository = taxFormRepository;
+        this.taxFormArchiveRepository = taxFormArchiveRepository;
         this.restTemplate = restTemplate;
         this.usersUrl = usersUrl;
         this.environment = environment;
@@ -39,6 +42,7 @@ public class TaxFormServiceImpl implements TaxFormService {
     @Override
     public TaxFormDto addTaxForm(TaxFormDto newTaxForm) {
 
+        //
         return new TaxFormDto(taxFormRepository.saveAndFlush(newTaxForm.getTaxForm()));
     }
 
@@ -53,14 +57,16 @@ public class TaxFormServiceImpl implements TaxFormService {
     @Override
     public TaxFormDto populateTaxFormByUserId(int userId) {
 
-        // Create a new TaxFormDto object:
-        TaxFormDto taxFormDto = new TaxFormDto();
+        // See if TaxForm already exists for User ID. If not, create a new TaxFormDto object with a new TaxForm object:
+        TaxFormDto taxFormDto = taxFormRepository.findByUserId(userId)
+                .map(TaxFormDto::new)
+                .orElse(new TaxFormDto(new TaxForm()));
 
         // Set Wages, Taxes, Credits, and Deductions based on UserDto object:
         setFinancialData(userId, taxFormDto);
 
         taxFormDto.setRefund(calculateRefund(taxFormDto));
-        return addTaxForm(taxFormDto);
+        return taxFormDto;
     }
 
     // Utility method to update the TaxFormDto object with financial data:
@@ -74,18 +80,23 @@ public class TaxFormServiceImpl implements TaxFormService {
             throw new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString()));
         }
 
+        // Set total wages to the sum of all wages from W2s:
         BigDecimal totalWages = userDto.getW2s().stream().map(W2Dto::getWages).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalWages(totalWages);
 
+        // Set total federal taxes withheld to the sum of all federal taxes withheld from W2s:
         BigDecimal totalFederalTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getFederalTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalFederalTaxesWithheld(totalFederalTaxesWithheld);
 
+        // Set total social security taxes withheld to the sum of all social security taxes withheld from W2s:
         BigDecimal totalSocialSecurityTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getSocialSecurityTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalSocialSecurityTaxesWithheld(totalSocialSecurityTaxesWithheld);
 
+        // Set total medicare taxes withheld to the sum of all medicare taxes withheld from W2s:
         BigDecimal totalMedicareTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getMedicareTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalMedicareTaxesWithheld(totalMedicareTaxesWithheld);
 
+        // Set credits and deductions based on userDto object:
         setCreditsAndDeductions(userId, taxFormDto);
 
         // Set the UserDto object in the TaxFormDto object:
@@ -118,6 +129,16 @@ public class TaxFormServiceImpl implements TaxFormService {
     public void deleteTaxFormById(int id) {
         findTaxFormById(id);
         taxFormRepository.deleteById(id);
+    }
+
+    // Submit TaxForm:
+    @Override
+    public TaxFormDto submitTaxForm(int id) {
+        TaxFormDto taxFormDto = findTaxFormById(id);
+        taxFormDto = populateTaxFormByUserId(taxFormDto.getUser().getId());
+        taxFormDto =  new TaxFormDto(taxFormArchiveRepository.saveAndFlush(taxFormDto.getTaxForm()));
+        deleteTaxFormById(id);
+        return taxFormDto;
     }
 
     // Calculate federal income taxes owed:
@@ -211,7 +232,10 @@ public class TaxFormServiceImpl implements TaxFormService {
         // Total Credits:
         BigDecimal credits = taxForm.getCredits();
 
-        return taxesPaid.add(credits).subtract(taxesOwedAfterDeductions).setScale(2, RoundingMode.HALF_UP);
+        return taxesPaid
+                .add(credits)
+                .subtract(taxesOwedAfterDeductions)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
 }

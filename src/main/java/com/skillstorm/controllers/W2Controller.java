@@ -4,12 +4,16 @@ import com.skillstorm.dtos.W2Dto;
 import com.skillstorm.services.W2Service;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -64,12 +68,27 @@ public class W2Controller {
     @PostMapping("/{id}/image")
     public ResponseEntity<Void> uploadW2Image(@PathVariable int id, @RequestBody byte[] image, @RequestHeader("Content-Type") String contentType) {
         w2Service.uploadW2Image(id, image, contentType);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // Download image of W2:
-    @GetMapping("/{id}/image")
-    public ResponseEntity<InputStream> downloadW2Image(@PathVariable int id) {
-        return ResponseEntity.ok(w2Service.downloadW2Image(id));
+    @GetMapping(value = "/{id}/image")
+    public ResponseEntity<Resource> downloadW2Image(@PathVariable int id) {
+        Resource imageResource = w2Service.downloadW2Image(id);
+        String contentType = determineContentType(imageResource);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(imageResource);
+    }
+
+    // Utility method to determine the content type of a file:
+    private String determineContentType(Resource resource) {
+        Tika tika = new Tika();
+        try {
+            // Use Tika to parse the file
+            String contentType = tika.detect(resource.getInputStream());
+            return contentType;
+        } catch (IOException e) {
+            // Handle the exception
+            throw new RuntimeException("Failed to determine content type.", e);
+        }
     }
 }

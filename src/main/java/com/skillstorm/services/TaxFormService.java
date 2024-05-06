@@ -18,4 +18,7 @@ public interface TaxFormService {
 
     // Delete TaxForm by ID:
     void deleteTaxFormById(int id);
+
+    // Submit TaxForm:
+    TaxFormDto submitTaxForm(int id);
 }

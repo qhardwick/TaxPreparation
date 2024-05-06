@@ -41,3 +41,10 @@ public class TaxForm {
 
     private BigDecimal refund;
 }
+
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "tax_forms_archive")
+class TaxFormArchive extends TaxForm {
+}

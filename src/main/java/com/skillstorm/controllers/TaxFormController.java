@@ -29,6 +29,12 @@ public class TaxFormController {
         return ResponseEntity.created(URI.create("/" + createdTaxForm.getId())).body(createdTaxForm);
     }
 
+    // Submit TaxForm:
+    @PostMapping("/{id}/submit")
+    public ResponseEntity<TaxFormDto> submitTaxForm(@PathVariable int id) {
+        return ResponseEntity.ok(taxFormService.submitTaxForm(id));
+    }
+
     // Find TaxForm by ID:
     @GetMapping("/{id}")
     public ResponseEntity<TaxFormDto> findTaxFormById(@PathVariable int id) {
@@ -36,7 +42,7 @@ public class TaxFormController {
     }
 
     // Populate TaxForm based on User ID:
-    @GetMapping()
+    @GetMapping
     @PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<TaxFormDto> populateTaxFormByUserId(@PathParam("userId") int userId) {
         return ResponseEntity.ok(taxFormService.populateTaxFormByUserId(userId));
