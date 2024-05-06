@@ -3,6 +3,7 @@ package com.skillstorm.services;
 import com.skillstorm.dtos.*;
 import com.skillstorm.entities.User;
 import com.skillstorm.entities.W2;
+import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.TaxFormArchiveRepository;
 import com.skillstorm.repositories.TaxFormRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +15,16 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -150,9 +155,71 @@ public class TaxFormServiceTest {
         w2Dto.setUserId(1);
     }
 
-    // Populate the TaxForm based on the UserID success:
+    // Populate TaxForm based on UserId but no User found:
     @Test
-    public void testPopulateTaxFormSuccess() {
+    public void testPopulateTaxFormThrowsUserNotFoundException() {
+
+        // Define stubbings:
+        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        doThrow(HttpClientErrorException.class).when(restTemplate).getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class);
+
+        // Verify result:
+        assertThrows(UserNotFoundException.class, () -> taxFormService.populateTaxFormByUserId(1), "Should throw UserNotFoundException");
+    }
+
+    // Populate the TaxForm based on the UserID success (wages: 5,000):
+    @Test
+    public void testPopulateTaxForm5000Success() {
+
+        userDto.getW2s().get(0).setWages(BigDecimal.valueOf(5000.00));
+
+        // Define stubbings:
+        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+
+        // Call the method to test:
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+
+        // Verify result:
+        assertEquals(BigDecimal.valueOf(5000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
+        assertEquals(BigDecimal.valueOf(5000.00), result.getTotalFederalTaxesWithheld(), "Total federal taxes withheld should be: 5000.00");
+        assertEquals(BigDecimal.valueOf(2000.00), result.getTotalSocialSecurityTaxesWithheld(), "Social Security taxes withheld should be: 2000.00");
+        assertEquals(BigDecimal.valueOf(1000.00), result.getTotalMedicareTaxesWithheld(), "Total Medicare taxes withheld should be: 1000.00");
+        assertEquals(BigDecimal.valueOf(6000.00), result.getCredits(), "Total tax Credits should be: 6000.00");
+        assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
+        assertEquals(BigDecimal.valueOf(13417.50).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: 13417.50");
+    }
+
+    // Populate the TaxForm based on the UserID success (wages: 20,000):
+    @Test
+    public void testPopulateTaxForm20000Success() {
+
+        userDto.getW2s().get(0).setWages(BigDecimal.valueOf(20000.00));
+
+        // Define stubbings:
+        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+
+        // Call the method to test:
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+
+        // Verify result:
+        assertEquals(BigDecimal.valueOf(20000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
+        assertEquals(BigDecimal.valueOf(5000.00), result.getTotalFederalTaxesWithheld(), "Total federal taxes withheld should be: 5000.00");
+        assertEquals(BigDecimal.valueOf(2000.00), result.getTotalSocialSecurityTaxesWithheld(), "Social Security taxes withheld should be: 2000.00");
+        assertEquals(BigDecimal.valueOf(1000.00), result.getTotalMedicareTaxesWithheld(), "Total Medicare taxes withheld should be: 1000.00");
+        assertEquals(BigDecimal.valueOf(6000.00), result.getCredits(), "Total tax Credits should be: 6000.00");
+        assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
+        assertEquals(BigDecimal.valueOf(10567.50).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: 13417.50");
+    }
+
+    // Populate the TaxForm based on the UserID success (wages: 50,000):
+    @Test
+    public void testPopulateTaxForm50000Success() {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
@@ -170,6 +237,106 @@ public class TaxFormServiceTest {
         assertEquals(BigDecimal.valueOf(1000.00), result.getTotalMedicareTaxesWithheld(), "Total Medicare taxes withheld should be: 1000.00");
         assertEquals(BigDecimal.valueOf(6000.00), result.getCredits(), "Total tax Credits should be: 6000.00");
         assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
-        assertEquals(BigDecimal.valueOf(3685.00).setScale(2), result.getRefund(), "Total tax Refund should be: ");
+        assertEquals(BigDecimal.valueOf(3685.00).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: ");
+    }
+
+    // Populate the TaxForm based on the UserID success (wages: 100,000):
+    @Test
+    public void testPopulateTaxForm100000Success() {
+
+        userDto.getW2s().get(0).setWages(BigDecimal.valueOf(100000.00));
+
+        // Define stubbings:
+        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+
+        // Call the method to test:
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+
+        // Verify result:
+        assertEquals(BigDecimal.valueOf(100000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
+        assertEquals(BigDecimal.valueOf(5000.00), result.getTotalFederalTaxesWithheld(), "Total federal taxes withheld should be: 5000.00");
+        assertEquals(BigDecimal.valueOf(2000.00), result.getTotalSocialSecurityTaxesWithheld(), "Social Security taxes withheld should be: 2000.00");
+        assertEquals(BigDecimal.valueOf(1000.00), result.getTotalMedicareTaxesWithheld(), "Total Medicare taxes withheld should be: 1000.00");
+        assertEquals(BigDecimal.valueOf(6000.00), result.getCredits(), "Total tax Credits should be: 6000.00");
+        assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
+        assertEquals(BigDecimal.valueOf(-11429.50).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: ");
+    }
+
+    // Populate the TaxForm based on the UserID success (wages: 200,000):
+    @Test
+    public void testPopulateTaxForm200000Success() {
+
+        userDto.getW2s().get(0).setWages(BigDecimal.valueOf(200000.00));
+
+        // Define stubbings:
+        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+
+        // Call the method to test:
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+
+        // Verify result:
+        assertEquals(BigDecimal.valueOf(200000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
+        assertEquals(BigDecimal.valueOf(5000.00), result.getTotalFederalTaxesWithheld(), "Total federal taxes withheld should be: 5000.00");
+        assertEquals(BigDecimal.valueOf(2000.00), result.getTotalSocialSecurityTaxesWithheld(), "Social Security taxes withheld should be: 2000.00");
+        assertEquals(BigDecimal.valueOf(1000.00), result.getTotalMedicareTaxesWithheld(), "Total Medicare taxes withheld should be: 1000.00");
+        assertEquals(BigDecimal.valueOf(6000.00), result.getCredits(), "Total tax Credits should be: 6000.00");
+        assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
+        assertEquals(BigDecimal.valueOf(-46015.00).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: ");
+    }
+
+    // Populate the TaxForm based on the UserID success (wages: 400,000):
+    @Test
+    public void testPopulateTaxForm400000Success() {
+
+        userDto.getW2s().get(0).setWages(BigDecimal.valueOf(400000.00));
+
+        // Define stubbings:
+        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+
+        // Call the method to test:
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+
+        // Verify result:
+        assertEquals(BigDecimal.valueOf(400000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
+        assertEquals(BigDecimal.valueOf(5000.00), result.getTotalFederalTaxesWithheld(), "Total federal taxes withheld should be: 5000.00");
+        assertEquals(BigDecimal.valueOf(2000.00), result.getTotalSocialSecurityTaxesWithheld(), "Social Security taxes withheld should be: 2000.00");
+        assertEquals(BigDecimal.valueOf(1000.00), result.getTotalMedicareTaxesWithheld(), "Total Medicare taxes withheld should be: 1000.00");
+        assertEquals(BigDecimal.valueOf(6000.00), result.getCredits(), "Total tax Credits should be: 6000.00");
+        assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
+        assertEquals(BigDecimal.valueOf(-131094.50).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: ");
+    }
+
+    // Populate the TaxForm based on the UserID success (wages: 1,000,000):
+    @Test
+    public void testPopulateTaxForm1000000Success() {
+
+        userDto.getW2s().get(0).setWages(BigDecimal.valueOf(1000000.00));
+
+        // Define stubbings:
+        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
+        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+
+        // Call the method to test:
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+
+        // Verify result:
+        assertEquals(BigDecimal.valueOf(1000000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
+        assertEquals(BigDecimal.valueOf(5000.00), result.getTotalFederalTaxesWithheld(), "Total federal taxes withheld should be: 5000.00");
+        assertEquals(BigDecimal.valueOf(2000.00), result.getTotalSocialSecurityTaxesWithheld(), "Social Security taxes withheld should be: 2000.00");
+        assertEquals(BigDecimal.valueOf(1000.00), result.getTotalMedicareTaxesWithheld(), "Total Medicare taxes withheld should be: 1000.00");
+        assertEquals(BigDecimal.valueOf(6000.00), result.getCredits(), "Total tax Credits should be: 6000.00");
+        assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
+        assertEquals(BigDecimal.valueOf(-396627.00).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: ");
     }
 }

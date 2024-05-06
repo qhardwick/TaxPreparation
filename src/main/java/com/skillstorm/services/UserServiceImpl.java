@@ -101,11 +101,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     // Update Password by ID:
     @Override
-    public void updatePasswordById(int id, UserDto updatedPassword) {
+    public void updatePasswordById(int id, String updatedPassword) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
 
-        existingUser.setPassword(passwordEncoder.encode(updatedPassword.getPassword()));
+        existingUser.setPassword(passwordEncoder.encode(updatedPassword));
+        userRepository.saveAndFlush(existingUser);
     }
 
     // Delete User by ID:
@@ -164,7 +165,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         // Use the deduction's rate to calculate the total value of the UserDeduction based on the amount spent by the user:
         UserDeduction userDeduction = userDeductionDto.getUserDeduction();
-        userDeduction.setDeductionAmount(userDeduction.getAmountSpent().multiply(deductionDto.getRate()));
+        userDeduction.setDeductionAmount(userDeduction.getAmountSpent().multiply(deductionDto.getRate()).setScale(2, RoundingMode.HALF_UP));
         userDeduction.setUser(user);
         userDeduction.setDeduction(deductionDto.getDeduction());
 

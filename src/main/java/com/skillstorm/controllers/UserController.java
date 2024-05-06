@@ -54,7 +54,7 @@ public class UserController {
     // Update Password by ID:
     @PutMapping("/{id}/password")
     @PreAuthorize("#id == authentication.principal.id")
-    public ResponseEntity<UserDto> updatePasswordById(@PathVariable int id, @RequestBody UserDto updatedPassword) {
+    public ResponseEntity<UserDto> updatePasswordById(@PathVariable int id, @RequestBody String updatedPassword) {
         userService.updatePasswordById(id, updatedPassword);
         return ResponseEntity.ok().build();
     }

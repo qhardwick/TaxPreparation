@@ -18,7 +18,7 @@ public interface UserService {
     UserDto updateUserById(int id, UserDto updatedUser);
 
     // Update Password by ID:
-    void updatePasswordById(int id, UserDto updatedPassword);
+    void updatePasswordById(int id, String updatedPassword);
 
     // Delete User by ID:
     void deleteUserById(int id);
