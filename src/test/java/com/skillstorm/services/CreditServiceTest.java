@@ -47,11 +47,6 @@ public class CreditServiceTest {
         credit.setValue(BigDecimal.valueOf(1000.00));
     }
 
-    @AfterEach
-    public void resetMocks() {
-        reset(creditRepository, environment);
-    }
-
     // Add Credit:
     @Test
     public void addCreditTest() {

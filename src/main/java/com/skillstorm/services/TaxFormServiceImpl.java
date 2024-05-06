@@ -60,7 +60,7 @@ public class TaxFormServiceImpl implements TaxFormService {
         // See if TaxForm already exists for User ID. If not, create a new TaxFormDto object with a new TaxForm object:
         TaxFormDto taxFormDto = taxFormRepository.findByUserId(userId)
                 .map(TaxFormDto::new)
-                .orElse(new TaxFormDto(new TaxForm()));
+                .orElse(new TaxFormDto());
 
         // Set Wages, Taxes, Credits, and Deductions based on UserDto object:
         setFinancialData(userId, taxFormDto);
