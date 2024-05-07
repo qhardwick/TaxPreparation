@@ -10,6 +10,6 @@ public class S3Config {
 
     @Bean
     public S3Client s3Client() {
-        return S3Client.builder().region(Region.US_EAST_1).build();
+        return S3Client.builder().region(Region.US_EAST_2).build();
     }
 }

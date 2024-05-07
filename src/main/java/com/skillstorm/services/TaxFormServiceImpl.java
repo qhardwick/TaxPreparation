@@ -1,7 +1,6 @@
 package com.skillstorm.services;
 
 import com.skillstorm.dtos.*;
-import com.skillstorm.entities.TaxForm;
 import com.skillstorm.exceptions.TaxFormNotFoundException;
 import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.TaxFormArchiveRepository;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 @PropertySource("classpath:application.properties")
@@ -25,16 +26,14 @@ public class TaxFormServiceImpl implements TaxFormService {
 
     private final TaxFormRepository taxFormRepository;
     private final TaxFormArchiveRepository taxFormArchiveRepository;
-    private final RestTemplate restTemplate;
-    private final String usersUrl;
+    private final UserService userService;
     private final Environment environment;
 
     @Autowired
-    public TaxFormServiceImpl(TaxFormRepository taxFormRepository, TaxFormArchiveRepository taxFormArchiveRepository, RestTemplate restTemplate, @Value("${users.url}") String usersUrl, Environment environment) {
+    public TaxFormServiceImpl(TaxFormRepository taxFormRepository, TaxFormArchiveRepository taxFormArchiveRepository, UserService userService, Environment environment) {
         this.taxFormRepository = taxFormRepository;
         this.taxFormArchiveRepository = taxFormArchiveRepository;
-        this.restTemplate = restTemplate;
-        this.usersUrl = usersUrl;
+        this.userService = userService;
         this.environment = environment;
     }
 
@@ -73,12 +72,7 @@ public class TaxFormServiceImpl implements TaxFormService {
     private void setFinancialData(int userId, TaxFormDto taxFormDto) {
 
         // Retrieve the UserDto object from the User Service:
-        UserDto userDto;
-        try {
-            userDto = restTemplate.getForObject(usersUrl + "/" + userId, UserDto.class);
-        } catch (HttpClientErrorException e) {
-            throw new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString()));
-        }
+        UserDto userDto = userService.findUserById(userId);
 
         // Set total wages to the sum of all wages from W2s:
         BigDecimal totalWages = userDto.getW2s().stream().map(W2Dto::getWages).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -106,13 +100,13 @@ public class TaxFormServiceImpl implements TaxFormService {
     // Utility method to update the TaxFormDto object with credits and deductions:
     private void setCreditsAndDeductions(int userId, TaxFormDto taxFormDto) {
         // Set credits based on userDto object:
-        UserCreditDto[] userCreditDtoList = restTemplate.getForObject(usersUrl + "/" + userId + "/credits", UserCreditDto[].class);
-        BigDecimal credits = Arrays.stream(userCreditDtoList).map(UserCreditDto::getTotalValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+        List<UserCreditDto> userCreditDtoList = userService.findAllCreditsByUserId(userId);
+        BigDecimal credits = userCreditDtoList.stream().map(UserCreditDto::getTotalValue).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setCredits(credits);
 
         // Set deductions based on userDto object:
-        UserDeductionDto[] userDeductionDtoList = restTemplate.getForObject(usersUrl + "/" + userId + "/deductions", UserDeductionDto[].class);
-        BigDecimal deductions = Arrays.stream(userDeductionDtoList).map(UserDeductionDto::getDeductionAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        List<UserDeductionDto> userDeductionDtoList = userService.findAllDeductionsByUserId(userId);
+        BigDecimal deductions = userDeductionDtoList.stream().map(UserDeductionDto::getDeductionAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setDeductions(deductions);
     }
 

@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 public class UserCreditDto {
 
     private int id;
+    private int year;
     private int userId;
     private int creditId;
     private int creditsClaimed;
@@ -23,6 +24,7 @@ public class UserCreditDto {
 
     public UserCreditDto(UserCredit userCredit) {
         this.id = userCredit.getId();
+        this.year = userCredit.getYear();
         this.userId = userCredit.getUser().getId();
         this.creditId = userCredit.getCredit().getId();
         this.creditsClaimed = userCredit.getCreditsClaimed();
@@ -33,6 +35,7 @@ public class UserCreditDto {
     public UserCredit getUserCredit() {
         UserCredit userCredit = new UserCredit();
         userCredit.setId(this.id);
+        userCredit.setYear(this.year);
         userCredit.setUserId(this.userId);
         userCredit.setCreditId(this.creditId);
         userCredit.setCreditsClaimed(this.creditsClaimed);

@@ -14,6 +14,8 @@ public class UserCredit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private int year;
+
     @Column(name = "user_id")
     private int userId;
 

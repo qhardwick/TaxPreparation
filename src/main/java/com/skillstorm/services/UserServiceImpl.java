@@ -35,22 +35,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final UserCreditRepository userCreditRepository;
     private final UserDeductionRepository userDeductionRepository;
+    private final CreditService creditService;
+    private final DeductionService deductionService;
     private final PasswordEncoder passwordEncoder;
-    private final RestTemplate restTemplate;
-    private final String creditsUrl;
-    private final String deductionsUrl;
     private final Environment environment;
 
     @Autowired
-    public UserServiceImpl (UserRepository userRepository, UserCreditRepository userCreditRepository, UserDeductionRepository userDeductionRepository, PasswordEncoder passwordEncoder,
-                           RestTemplate restTemplate, @Value("${credits.url}") String creditsUrl, @Value("${deductions.url}") String deductionsUrl, Environment environment){
+    public UserServiceImpl (UserRepository userRepository, UserCreditRepository userCreditRepository,
+                            UserDeductionRepository userDeductionRepository, CreditService creditService,
+                            DeductionService deductionService, PasswordEncoder passwordEncoder, Environment environment){
         this.userRepository = userRepository;
         this.userCreditRepository = userCreditRepository;
         this.userDeductionRepository = userDeductionRepository;
+        this.creditService = creditService;
+        this.deductionService = deductionService;
         this.passwordEncoder = passwordEncoder;
-        this.restTemplate = restTemplate;
-        this.creditsUrl = creditsUrl;
-        this.deductionsUrl = deductionsUrl;
         this.environment = environment;
     }
 
@@ -124,12 +123,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = findUserById(id).getUser();
 
         // Make a GET request to the credits service to get the credit with the given ID:
-        CreditDto creditDto;
-        try {
-            creditDto = restTemplate.getForObject(creditsUrl + "/" + userCreditDto.getCreditId(), CreditDto.class);
-        } catch (HttpClientErrorException e) {
-            throw new CreditNotFoundException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString()));
-        }
+        CreditDto creditDto = creditService.findCreditById(userCreditDto.getCreditId());
 
         // Multiply the value of the credit by the number of credits claimed by the user to get the total value of the UserCredit:
         UserCredit userCredit = userCreditDto.getUserCredit();
@@ -156,12 +150,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = findUserById(id).getUser();
 
         // Make a GET request to the deductions service to get the deduction with the given ID:
-        DeductionDto deductionDto;
-        try {
-            deductionDto = restTemplate.getForObject(deductionsUrl + "/" + userDeductionDto.getDeductionId(), DeductionDto.class);
-        } catch (HttpClientErrorException e) {
-            throw new DeductionNotFoundException(environment.getProperty(SystemMessages.DEDUCTION_NOT_FOUND.toString()));
-        }
+        DeductionDto deductionDto = deductionService.findDeductionById(userDeductionDto.getDeductionId());
 
         // Use the deduction's rate to calculate the total value of the UserDeduction based on the amount spent by the user:
         UserDeduction userDeduction = userDeductionDto.getUserDeduction();
