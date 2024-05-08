@@ -14,6 +14,9 @@ public interface UserService {
     // Find User by ID:
     UserDto findUserById(int id);
 
+    // Find User by Username:
+    UserDto login(UserDto authCredentials);
+
     // Update User by ID:
     UserDto updateUserById(int id, UserDto updatedUser);
 

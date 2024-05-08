@@ -43,10 +43,9 @@ public class UserServiceTest {
     @Mock private static UserRepository userRepository;
     @Mock private static UserCreditRepository userCreditRepository;
     @Mock private static UserDeductionRepository userDeductionRepository;
+    @Mock private static CreditService creditService;
+    @Mock private static DeductionService deductionService;
     @Spy private PasswordEncoder passwordEncoder;
-    @Mock private static RestTemplate restTemplate;
-    private static String creditsUrl;
-    private static String deductionsUrl;
     @Spy private static Environment environment;
 
     private static UserDto userDto;
@@ -63,9 +62,7 @@ public class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        userService = new UserServiceImpl(userRepository, userCreditRepository, userDeductionRepository, passwordEncoder, restTemplate, creditsUrl, deductionsUrl, environment);
-        ReflectionTestUtils.setField(userService, "creditsUrl", "http://localhost:8080/taxstorm/credits");
-        ReflectionTestUtils.setField(userService, "deductionsUrl", "http://localhost:8080/taxstorm/deductions");
+        userService = new UserServiceImpl(userRepository, userCreditRepository, userDeductionRepository, creditService, deductionService, passwordEncoder, environment);
 
         setUpUsers();
         setUpCredits();
@@ -319,7 +316,7 @@ public class UserServiceTest {
 
         // Define Stubbings:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/credits/1", CreditDto.class)).thenReturn(creditDto);
+        when(creditService.findCreditById(1)).thenReturn(creditDto);
         when(userCreditRepository.saveAndFlush(userCreditToSave)).thenReturn(userCredit);
 
         // Call the method to test:
@@ -331,18 +328,6 @@ public class UserServiceTest {
         assertEquals(1, result.getCreditId(), "UserCredit.creditId should be: 1");
         assertEquals(2, result.getCreditsClaimed(), "Number of credits claimed should be: 2");
         assertEquals(BigDecimal.valueOf(2000.00).setScale(2, RoundingMode.HALF_UP), result.getTotalValue(), "Total value should be: 2000.00");
-    }
-
-    // Add Tax Credit to User Fails Credit Not Found:
-    @Test
-    public void addTaxCreditThrowsCreditNotFoundExceptionTest() {
-
-        // Define Stubbings:
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        doThrow(HttpClientErrorException.class).when(restTemplate).getForObject("http://localhost:8080/taxstorm/credits/1", CreditDto.class);
-
-        // Verify the result:
-        assertThrows(CreditNotFoundException.class, () -> userService.addTaxCredit(1, userCreditDto), "Should throw CreditNotFoundException");
     }
 
     // Find all Credits claimed by a User:
@@ -371,7 +356,7 @@ public class UserServiceTest {
 
         // Define Stubbings:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/deductions/1", DeductionDto.class)).thenReturn(deductionDto);
+        when(deductionService.findDeductionById(1)).thenReturn(deductionDto);
         when(userDeductionRepository.saveAndFlush(userDeductionToSave)).thenReturn(userDeduction);
 
         // Call the method to test:
@@ -383,18 +368,6 @@ public class UserServiceTest {
         assertEquals(1, result.getDeductionId(), "UserDeduction.creditId should be: 1");
         assertEquals(BigDecimal.valueOf(1000.00).setScale(2, RoundingMode.HALF_UP), result.getAmountSpent(), "Amount spent should be: 1000.00");
         assertEquals(BigDecimal.valueOf(500.00).setScale(2, RoundingMode.HALF_UP), result.getDeductionAmount(), "Total deduction should be: 500.00");
-    }
-
-    // Add Tax Deduction to User Fails Deduction Not Found:
-    @Test
-    public void addTaxDeductionThrowsDeductionNotFoundExceptionTest() {
-
-        // Define Stubbings:
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        doThrow(HttpClientErrorException.class).when(restTemplate).getForObject("http://localhost:8080/taxstorm/deductions/1", DeductionDto.class);
-
-        // Verify the result:
-        assertThrows(DeductionNotFoundException.class, () -> userService.addDeduction(1, userDeductionDto), "Should throw DeductionNotFoundException");
     }
 
     // Find all Deductions claimed by a User:

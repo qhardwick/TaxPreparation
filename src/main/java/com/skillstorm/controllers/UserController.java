@@ -6,17 +6,13 @@ import com.skillstorm.dtos.UserDto;
 import com.skillstorm.services.UserService;
 import com.skillstorm.validations.AddUserGroup;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -44,6 +40,13 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
+    // Find User by Username:
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody UserDto authCredentials) {
+        return ResponseEntity.ok(userService.login(authCredentials));
+    }
+
+
     // Update User by ID:
     @PutMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.id")
@@ -54,7 +57,7 @@ public class UserController {
     // Update Password by ID:
     @PutMapping("/{id}/password")
     @PreAuthorize("#id == authentication.principal.id")
-    public ResponseEntity<UserDto> updatePasswordById(@PathVariable int id, @RequestBody String updatedPassword) {
+    public ResponseEntity<Void> updatePasswordById(@PathVariable int id, @RequestBody String updatedPassword) {
         userService.updatePasswordById(id, updatedPassword);
         return ResponseEntity.ok().build();
     }

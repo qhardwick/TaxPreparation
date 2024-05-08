@@ -20,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,8 +42,8 @@ public class TaxFormServiceTest {
     private static UserDto userDto;
     private static W2 w2;
     private static W2Dto w2Dto;
-    private static UserCreditDto[] userCreditDtos;
-    private static UserDeductionDto[] userDeductionDtos;
+    private static List<UserCreditDto> userCreditDtos;
+    private static List<UserDeductionDto> userDeductionDtos;
 
 
     @BeforeEach
@@ -76,7 +78,10 @@ public class TaxFormServiceTest {
         userDeductionDto3.setAmountSpent(BigDecimal.valueOf(300.00));
         userDeductionDto3.setDeductionAmount(BigDecimal.valueOf(150.00));
 
-        userDeductionDtos = new UserDeductionDto[] {userDeductionDto1, userDeductionDto2, userDeductionDto3};
+        userDeductionDtos = new ArrayList<>();
+        userDeductionDtos.add(userDeductionDto1);
+        userDeductionDtos.add(userDeductionDto2);
+        userDeductionDtos.add(userDeductionDto3);
     }
 
     private void setUpUserCreditDtos() {
@@ -101,7 +106,10 @@ public class TaxFormServiceTest {
         userCreditDto3.setCreditsClaimed(3);
         userCreditDto3.setTotalValue(BigDecimal.valueOf(3000.00));
 
-        userCreditDtos = new UserCreditDto[] {userCreditDto1, userCreditDto2, userCreditDto3};
+        userCreditDtos = new ArrayList<>();
+        userCreditDtos.add(userCreditDto1);
+        userCreditDtos.add(userCreditDto2);
+        userCreditDtos.add(userCreditDto3);
     }
 
     private void setUpUsers() {
@@ -152,18 +160,6 @@ public class TaxFormServiceTest {
         w2Dto.setMedicareTaxesWithheld(BigDecimal.valueOf(1000.00));
         w2Dto.setUserId(1);
     }
-/*
-    // Populate TaxForm based on UserId but no User found:
-    @Test
-    public void testPopulateTaxFormThrowsUserNotFoundException() {
-
-        // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        doThrow(HttpClientErrorException.class).when(restTemplate).getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class);
-
-        // Verify result:
-        assertThrows(UserNotFoundException.class, () -> taxFormService.populateTaxFormByUserId(1), "Should throw UserNotFoundException");
-    }
 
     // Populate the TaxForm based on the UserID success (wages: 5,000):
     @Test
@@ -173,9 +169,9 @@ public class TaxFormServiceTest {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+        when(userService.findUserById(1)).thenReturn(userDto);
+        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
@@ -198,9 +194,9 @@ public class TaxFormServiceTest {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+        when(userService.findUserById(1)).thenReturn(userDto);
+        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
@@ -221,9 +217,9 @@ public class TaxFormServiceTest {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+        when(userService.findUserById(1)).thenReturn(userDto);
+        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
@@ -246,9 +242,9 @@ public class TaxFormServiceTest {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+        when(userService.findUserById(1)).thenReturn(userDto);
+        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
@@ -271,9 +267,9 @@ public class TaxFormServiceTest {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+        when(userService.findUserById(1)).thenReturn(userDto);
+        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
@@ -296,9 +292,9 @@ public class TaxFormServiceTest {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+        when(userService.findUserById(1)).thenReturn(userDto);
+        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
@@ -321,9 +317,9 @@ public class TaxFormServiceTest {
 
         // Define stubbings:
         when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1", UserDto.class)).thenReturn(userDto);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/credits", UserCreditDto[].class)).thenReturn(userCreditDtos);
-        when(restTemplate.getForObject("http://localhost:8080/taxstorm/users/1/deductions", UserDeductionDto[].class)).thenReturn(userDeductionDtos);
+        when(userService.findUserById(1)).thenReturn(userDto);
+        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
@@ -337,6 +333,4 @@ public class TaxFormServiceTest {
         assertEquals(BigDecimal.valueOf(300.00), result.getDeductions(), "Total tax Deductions should be: 300.00");
         assertEquals(BigDecimal.valueOf(-396627.00).setScale(2, RoundingMode.HALF_UP), result.getRefund(), "Total tax Refund should be: ");
     }
-    
- */
 }

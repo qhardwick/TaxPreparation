@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDto addUser(UserDto newUserDto) {
         User newUser = newUserDto.getUser();
+        // Spring Security demands a username, but we don't want to force our users to come up with one:
+        newUser.setUsername(newUserDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         try {
@@ -72,6 +74,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findById(id)
                 .map(UserDto::new)
                 .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
+    }
+
+    @Override
+    public UserDto login(UserDto authCredentials) {
+        String email = authCredentials.getEmail();
+        String password = authCredentials.getPassword();
+
+        User user = userRepository.findByUsername(email)
+                .orElseThrow(() -> new IllegalArgumentException(environment.getProperty(SystemMessages.INVALID_CREDENTIALS.toString())));
+
+        if (!passwordEncoder.matches(authCredentials.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException(environment.getProperty(SystemMessages.INVALID_CREDENTIALS.toString()));
+        }
+
+        return new UserDto(user);
     }
 
     // Load User by Username (for Spring Security):

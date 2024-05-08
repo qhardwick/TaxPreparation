@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 public class UserDeductionDto {
 
     private int id;
+    private int year;
     private int userId;
     private int deductionId;
     private BigDecimal amountSpent;
@@ -19,6 +20,7 @@ public class UserDeductionDto {
 
     public UserDeductionDto(UserDeduction userDeduction) {
         this.id = userDeduction.getId();
+        this.year = userDeduction.getYear();
         this.userId = userDeduction.getUser().getId();
         this.deductionId = userDeduction.getDeduction().getId();
         this.amountSpent = userDeduction.getAmountSpent();
@@ -29,6 +31,7 @@ public class UserDeductionDto {
     public UserDeduction getUserDeduction() {
         UserDeduction userDeduction = new UserDeduction();
         userDeduction.setId(this.id);
+        userDeduction.setYear(this.year);
         userDeduction.setUserId(this.userId);
         userDeduction.setDeductionId(this.deductionId);
         userDeduction.setAmountSpent(this.amountSpent);
