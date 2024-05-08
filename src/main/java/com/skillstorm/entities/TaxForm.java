@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +16,7 @@ public class TaxForm {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -40,11 +39,4 @@ public class TaxForm {
     private BigDecimal deductions;
 
     private BigDecimal refund;
-}
-
-@Data
-@NoArgsConstructor
-@Entity
-@Table(name = "tax_forms_archive")
-class TaxFormArchive extends TaxForm {
 }

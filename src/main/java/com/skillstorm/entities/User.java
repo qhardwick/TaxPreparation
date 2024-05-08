@@ -40,7 +40,7 @@ public class User implements UserDetails {
     @Column(name = "ssn")
     private String ssn;
 
-    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<W2> w2s;
 
     private String role;

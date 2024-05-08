@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/taxforms")
@@ -23,17 +24,11 @@ public class TaxFormController {
         this.taxFormService = taxFormService;
     }
 
-    // Add new TaxForm:
-    @PostMapping
-    public ResponseEntity<TaxFormDto> addTaxForm(@Valid @RequestBody TaxFormDto newTaxForm) {
-        TaxFormDto createdTaxForm = taxFormService.addTaxForm(newTaxForm);
-        return ResponseEntity.created(URI.create("/" + createdTaxForm.getId())).body(createdTaxForm);
-    }
-
     // Submit TaxForm:
-    @PostMapping("/{id}/submit")
-    public ResponseEntity<TaxFormDto> submitTaxForm(@PathVariable int id) {
-        return ResponseEntity.ok(taxFormService.submitTaxForm(id));
+    @PostMapping("/{userId}/{year}")
+    public ResponseEntity<TaxFormDto> submitTaxForm(@PathVariable("userId") int userId, @PathVariable("year") int year) {
+        TaxFormDto createdTaxForm = taxFormService.submitTaxForm(userId, year);
+        return ResponseEntity.created(URI.create("/" + createdTaxForm.getId())).body(createdTaxForm);
     }
 
     // Find TaxForm by ID:
@@ -43,10 +38,17 @@ public class TaxFormController {
     }
 
     // Populate TaxForm based on User ID and Year:
+    @GetMapping("/{userId}/{year}")
+    @PreAuthorize("#userId == authentication.principal.id")
+    public ResponseEntity<TaxFormDto> populateTaxFormByUserId(@PathVariable("userId") int userId, @PathVariable("year") int year) {
+        return ResponseEntity.ok(taxFormService.populateTaxFormByUserId(userId, year));
+    }
+
+    // Find all TaxForms by User ID:
     @GetMapping
     @PreAuthorize("#userId == authentication.principal.id")
-    public ResponseEntity<TaxFormDto> populateTaxFormByUserId(@PathParam("userId") int userId, @PathParam("year") int year) {
-        return ResponseEntity.ok(taxFormService.populateTaxFormByUserId(userId, year));
+    public ResponseEntity<List<TaxFormDto>> findAllTaxFormsByUserId(@PathParam("userId") int userId) {
+        return ResponseEntity.ok(taxFormService.findAllTaxFormsByUserId(userId));
     }
 
     // Update TaxForm by ID:

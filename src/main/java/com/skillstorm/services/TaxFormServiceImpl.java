@@ -39,10 +39,9 @@ public class TaxFormServiceImpl implements TaxFormService {
 
     // Add new TaxForm:
     @Override
-    public TaxFormDto addTaxForm(TaxFormDto newTaxForm) {
-
-        //
-        return new TaxFormDto(taxFormRepository.saveAndFlush(newTaxForm.getTaxForm()));
+    public TaxFormDto submitTaxForm(int userId, int year) {
+        TaxFormDto finalTaxForm = populateTaxFormByUserId(userId, year);
+        return new TaxFormDto(taxFormRepository.saveAndFlush(finalTaxForm.getTaxForm()));
     }
 
     // Find TaxForm by ID:
@@ -66,6 +65,14 @@ public class TaxFormServiceImpl implements TaxFormService {
 
         taxFormDto.setRefund(calculateRefund(taxFormDto));
         return taxFormDto;
+    }
+
+    // Find all TaxForms by User ID:
+    @Override
+    public List<TaxFormDto> findAllTaxFormsByUserId(int userId) {
+        return taxFormRepository.findAllByUserId(userId).stream()
+                .map(TaxFormDto::new)
+                .toList();
     }
 
     // Utility method to update the TaxFormDto object with financial data:
@@ -141,16 +148,6 @@ public class TaxFormServiceImpl implements TaxFormService {
     public void deleteTaxFormById(int id) {
         findTaxFormById(id);
         taxFormRepository.deleteById(id);
-    }
-
-    // Submit TaxForm:
-    @Override
-    public TaxFormDto submitTaxForm(int id) {
-        TaxFormDto taxFormDto = findTaxFormById(id);
-        taxFormDto = populateTaxFormByUserId(taxFormDto.getUser().getId(), taxFormDto.getYear());
-        taxFormDto =  new TaxFormDto(taxFormArchiveRepository.saveAndFlush(taxFormDto.getTaxForm()));
-        deleteTaxFormById(id);
-        return taxFormDto;
     }
 
     // Calculate federal income taxes owed:
