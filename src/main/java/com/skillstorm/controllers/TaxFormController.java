@@ -13,6 +13,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/taxforms")
+@CrossOrigin(origins="*")
 public class TaxFormController {
 
     private final TaxFormService taxFormService;

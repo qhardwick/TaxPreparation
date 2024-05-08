@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/w2s")
+@CrossOrigin(origins="*")
 public class W2Controller {
 
     private final W2Service w2Service;

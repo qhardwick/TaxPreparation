@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/deductions")
+@CrossOrigin(origins="*")
 public class DeductionController {
 
     private final DeductionService deductionService;
