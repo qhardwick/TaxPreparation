@@ -42,11 +42,11 @@ public class TaxFormController {
         return ResponseEntity.ok(taxFormService.findTaxFormById(id));
     }
 
-    // Populate TaxForm based on User ID:
+    // Populate TaxForm based on User ID and Year:
     @GetMapping
     @PreAuthorize("#userId == authentication.principal.id")
-    public ResponseEntity<TaxFormDto> populateTaxFormByUserId(@PathParam("userId") int userId) {
-        return ResponseEntity.ok(taxFormService.populateTaxFormByUserId(userId));
+    public ResponseEntity<TaxFormDto> populateTaxFormByUserId(@PathParam("userId") int userId, @PathParam("year") int year) {
+        return ResponseEntity.ok(taxFormService.populateTaxFormByUserId(userId, year));
     }
 
     // Update TaxForm by ID:

@@ -168,13 +168,13 @@ public class TaxFormServiceTest {
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(5000.00));
 
         // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(taxFormRepository.findByUserIdAndYear(1, 1)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
         when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
         when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
-        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 1);
 
         // Verify result:
         assertEquals(BigDecimal.valueOf(5000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
@@ -193,13 +193,13 @@ public class TaxFormServiceTest {
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(20000.00));
 
         // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(taxFormRepository.findByUserIdAndYear(1,1)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
         when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
         when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
-        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 1);
 
         // Verify result:
         assertEquals(BigDecimal.valueOf(20000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
@@ -216,13 +216,13 @@ public class TaxFormServiceTest {
     public void testPopulateTaxForm50000Success() {
 
         // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(taxFormRepository.findByUserIdAndYear(1,1)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
         when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
         when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
-        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 1);
 
         // Verify result:
         assertEquals(BigDecimal.valueOf(50000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
@@ -241,13 +241,13 @@ public class TaxFormServiceTest {
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(100000.00));
 
         // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(taxFormRepository.findByUserIdAndYear(1,1)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
         when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
         when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
-        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 1);
 
         // Verify result:
         assertEquals(BigDecimal.valueOf(100000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
@@ -266,13 +266,13 @@ public class TaxFormServiceTest {
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(200000.00));
 
         // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(taxFormRepository.findByUserIdAndYear(1, 1)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
         when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
         when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
-        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 1);
 
         // Verify result:
         assertEquals(BigDecimal.valueOf(200000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
@@ -291,13 +291,13 @@ public class TaxFormServiceTest {
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(400000.00));
 
         // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(taxFormRepository.findByUserIdAndYear(1, 1)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
         when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
         when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
-        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 1);
 
         // Verify result:
         assertEquals(BigDecimal.valueOf(400000.00), result.getTotalWages(), "Total wages should be: 50,000.00");
@@ -316,13 +316,13 @@ public class TaxFormServiceTest {
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(1000000.00));
 
         // Define stubbings:
-        when(taxFormRepository.findByUserId(1)).thenReturn(Optional.empty());
+        when(taxFormRepository.findByUserIdAndYear(1, 1)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
         when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
         when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
-        TaxFormDto result = taxFormService.populateTaxFormByUserId(1);
+        TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 1);
 
         // Verify result:
         assertEquals(BigDecimal.valueOf(1000000.00), result.getTotalWages(), "Total wages should be: 50,000.00");

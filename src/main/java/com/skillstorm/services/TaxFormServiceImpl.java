@@ -54,12 +54,12 @@ public class TaxFormServiceImpl implements TaxFormService {
 
     // Populate the TaxForm based on the User ID:
     @Override
-    public TaxFormDto populateTaxFormByUserId(int userId) {
+    public TaxFormDto populateTaxFormByUserId(int userId, int year) {
 
         // See if TaxForm already exists for User ID. If not, create a new TaxFormDto object with a new TaxForm object:
-        TaxFormDto taxFormDto = taxFormRepository.findByUserId(userId)
+        TaxFormDto taxFormDto = taxFormRepository.findByUserIdAndYear(userId, year)
                 .map(TaxFormDto::new)
-                .orElse(new TaxFormDto());
+                .orElse(new TaxFormDto(year));
 
         // Set Wages, Taxes, Credits, and Deductions based on UserDto object:
         setFinancialData(userId, taxFormDto);
@@ -75,19 +75,31 @@ public class TaxFormServiceImpl implements TaxFormService {
         UserDto userDto = userService.findUserById(userId);
 
         // Set total wages to the sum of all wages from W2s:
-        BigDecimal totalWages = userDto.getW2s().stream().map(W2Dto::getWages).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalWages = userDto.getW2s().stream()
+                .filter(w2Dto -> w2Dto.getYear() == taxFormDto.getYear())
+                .map(W2Dto::getWages)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalWages(totalWages);
 
         // Set total federal taxes withheld to the sum of all federal taxes withheld from W2s:
-        BigDecimal totalFederalTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getFederalTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalFederalTaxesWithheld = userDto.getW2s().stream()
+                .filter(w2Dto -> w2Dto.getYear() == taxFormDto.getYear())
+                .map(W2Dto::getFederalTaxesWithheld)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalFederalTaxesWithheld(totalFederalTaxesWithheld);
 
         // Set total social security taxes withheld to the sum of all social security taxes withheld from W2s:
-        BigDecimal totalSocialSecurityTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getSocialSecurityTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalSocialSecurityTaxesWithheld = userDto.getW2s().stream()
+                .filter(w2Dto -> w2Dto.getYear() == taxFormDto.getYear())
+                .map(W2Dto::getSocialSecurityTaxesWithheld)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalSocialSecurityTaxesWithheld(totalSocialSecurityTaxesWithheld);
 
         // Set total medicare taxes withheld to the sum of all medicare taxes withheld from W2s:
-        BigDecimal totalMedicareTaxesWithheld = userDto.getW2s().stream().map(W2Dto::getMedicareTaxesWithheld).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalMedicareTaxesWithheld = userDto.getW2s().stream()
+                .filter(w2Dto -> w2Dto.getYear() == taxFormDto.getYear())
+                .map(W2Dto::getMedicareTaxesWithheld)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setTotalMedicareTaxesWithheld(totalMedicareTaxesWithheld);
 
         // Set credits and deductions based on userDto object:
@@ -101,12 +113,18 @@ public class TaxFormServiceImpl implements TaxFormService {
     private void setCreditsAndDeductions(int userId, TaxFormDto taxFormDto) {
         // Set credits based on userDto object:
         List<UserCreditDto> userCreditDtoList = userService.findAllCreditsByUserId(userId);
-        BigDecimal credits = userCreditDtoList.stream().map(UserCreditDto::getTotalValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal credits = userCreditDtoList.stream()
+                .filter(userCreditDto -> userCreditDto.getYear() == taxFormDto.getYear())
+                .map(UserCreditDto::getTotalValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setCredits(credits);
 
         // Set deductions based on userDto object:
         List<UserDeductionDto> userDeductionDtoList = userService.findAllDeductionsByUserId(userId);
-        BigDecimal deductions = userDeductionDtoList.stream().map(UserDeductionDto::getDeductionAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal deductions = userDeductionDtoList.stream()
+                .filter(userDeductionDto -> userDeductionDto.getYear() == taxFormDto.getYear())
+                .map(UserDeductionDto::getDeductionAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setDeductions(deductions);
     }
 
@@ -129,7 +147,7 @@ public class TaxFormServiceImpl implements TaxFormService {
     @Override
     public TaxFormDto submitTaxForm(int id) {
         TaxFormDto taxFormDto = findTaxFormById(id);
-        taxFormDto = populateTaxFormByUserId(taxFormDto.getUser().getId());
+        taxFormDto = populateTaxFormByUserId(taxFormDto.getUser().getId(), taxFormDto.getYear());
         taxFormDto =  new TaxFormDto(taxFormArchiveRepository.saveAndFlush(taxFormDto.getTaxForm()));
         deleteTaxFormById(id);
         return taxFormDto;

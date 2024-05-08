@@ -31,6 +31,11 @@ public class TaxFormDto {
 
     private BigDecimal refund;
 
+    public TaxFormDto(int year) {
+        this();
+        this.year = year;
+    }
+
     public TaxFormDto(TaxForm taxForm) {
         this.id = taxForm.getId();
         this.user = new UserDto(taxForm.getUser());

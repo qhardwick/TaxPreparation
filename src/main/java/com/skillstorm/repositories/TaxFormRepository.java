@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface TaxFormRepository extends JpaRepository<TaxForm, Integer> {
 
     // Find TaxForm by User ID:
-    Optional<TaxForm> findByUserId(int userId);
+    Optional<TaxForm> findByUserIdAndYear(int userId, int year);
 }
