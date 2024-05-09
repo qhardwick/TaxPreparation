@@ -91,6 +91,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(environment.getProperty(SystemMessages.USER_NOT_FOUND.toString())));
     }
 
+    // Login User:
     @Override
     public UserDto login(UserDto authCredentials) {
         String email = authCredentials.getEmail();
@@ -153,6 +154,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         // Verify User exists:
         User user = findUserById(id).getUser();
+        userCreditDto.setUserId(id);
 
         // Make a GET request to the credits service to get the credit with the given ID:
         CreditDto creditDto = creditService.findCreditById(userCreditDto.getCreditId());
@@ -180,6 +182,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDeductionDto addDeduction(int id, UserDeductionDto userDeductionDto) {
         // Verify User exists:
         User user = findUserById(id).getUser();
+        userDeductionDto.setUserId(id);
 
         // Make a GET request to the deductions service to get the deduction with the given ID:
         DeductionDto deductionDto = deductionService.findDeductionById(userDeductionDto.getDeductionId());
