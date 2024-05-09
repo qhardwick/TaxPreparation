@@ -11,6 +11,9 @@ public interface UserService {
     // Add new User:
     UserDto addUser(UserDto newUser);
 
+    // Add new Admin:
+    UserDto addAdmin(UserDto newAdmin);
+
     // Find User by ID:
     UserDto findUserById(int id);
 

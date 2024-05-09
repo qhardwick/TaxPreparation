@@ -34,6 +34,13 @@ public class UserController {
         return ResponseEntity.created(URI.create("/" + createdUser.getId())).body(createdUser);
     }
 
+    // Add new Admin:
+    @PostMapping("/admins")
+    public ResponseEntity<UserDto> addAdmin(@Validated(AddUserGroup.class) @RequestBody UserDto newAdmin) {
+        UserDto createdAdmin = userService.addAdmin(newAdmin);
+        return ResponseEntity.created(URI.create("/" + createdAdmin.getId())).body(createdAdmin);
+    }
+
     // Find User by ID:
     @GetMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.id")

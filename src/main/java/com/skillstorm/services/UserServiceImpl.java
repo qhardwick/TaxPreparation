@@ -68,6 +68,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    // Add new Admin:
+    @Override
+    public UserDto addAdmin(UserDto newAdmin) {
+        User admin = newAdmin.getUser();
+        admin.setUsername(admin.getEmail());
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setRole("ADMIN");
+
+        try {
+            return new UserDto(userRepository.saveAndFlush(admin));
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(environment.getProperty(SystemMessages.USER_ALREADY_EXISTS.toString()));
+        }
+    }
+
     // Find User by ID:
     @Override
     public UserDto findUserById(int id) {
