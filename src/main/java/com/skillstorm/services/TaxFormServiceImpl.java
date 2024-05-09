@@ -37,7 +37,7 @@ public class TaxFormServiceImpl implements TaxFormService {
         this.environment = environment;
     }
 
-    // Add new TaxForm:
+    // Submit TaxForm:
     @Override
     public TaxFormDto submitTaxForm(int userId, int year) {
         TaxFormDto finalTaxForm = populateTaxFormByUserId(userId, year);
@@ -67,7 +67,7 @@ public class TaxFormServiceImpl implements TaxFormService {
         return taxFormDto;
     }
 
-    // Find all TaxForms by User ID:
+    // Find all previously submitted TaxForms by User ID:
     @Override
     public List<TaxFormDto> findAllTaxFormsByUserId(int userId) {
         return taxFormRepository.findAllByUserId(userId).stream()
@@ -137,9 +137,9 @@ public class TaxFormServiceImpl implements TaxFormService {
 
     // Update TaxForm by ID:
     @Override
-    public TaxFormDto updateTaxFormById(int id, TaxFormDto updatedTaxForm) {
-        findTaxFormById(id);
-        updatedTaxForm.setId(id);
+    public TaxFormDto updateTaxFormById(int id) {
+        TaxFormDto taxFormToUpdate = findTaxFormById(id);
+        TaxFormDto updatedTaxForm = populateTaxFormByUserId(taxFormToUpdate.getUser().getId(), taxFormToUpdate.getYear());
         return new TaxFormDto(taxFormRepository.saveAndFlush(updatedTaxForm.getTaxForm()));
     }
 

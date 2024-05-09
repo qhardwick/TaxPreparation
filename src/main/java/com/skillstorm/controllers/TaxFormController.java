@@ -53,8 +53,8 @@ public class TaxFormController {
 
     // Update TaxForm by ID:
     @PutMapping("/{id}")
-    public ResponseEntity<TaxFormDto> updateTaxFormById(@PathVariable int id, @Valid @RequestBody TaxFormDto updatedTaxForm) {
-        return ResponseEntity.ok(taxFormService.updateTaxFormById(id, updatedTaxForm));
+    public ResponseEntity<TaxFormDto> updateTaxFormById(@PathVariable int id) {
+        return ResponseEntity.ok(taxFormService.updateTaxFormById(id));
     }
 
     // Delete TaxForm by ID:

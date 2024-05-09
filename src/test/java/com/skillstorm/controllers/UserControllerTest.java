@@ -165,6 +165,25 @@ public class UserControllerTest {
         assertNull(result.getBody().getPassword(), "Returned object password should be: null");
     }
 
+    // Test Login:
+    @Test
+    public void loginTest() {
+
+        // Define stubbing:
+        when(userService.login(newUser)).thenReturn(returnedNewUser);
+
+        // Call method to test:
+        ResponseEntity<UserDto> result =  userController.login(newUser);
+
+        // Verify result:
+        assertEquals(200, result.getStatusCode().value(), "Response should be: 201");
+        assertEquals(HttpStatus.OK, result.getStatusCode(), "Response should be OK");
+        assertEquals(1, result.getBody().getId(), "User ID should be: 1");
+        assertEquals("test@email.com", result.getBody().getEmail(), "Email should be: test@email.com");
+        assertEquals("test@email.com", result.getBody().getUsername(), "Username should be: test@email.com");
+        assertNull(result.getBody().getPassword(), "Returned object password should be: null");
+    }
+
     // Test Update User:
     @Test
     public void updateUserTest() {

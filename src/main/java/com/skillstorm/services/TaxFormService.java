@@ -19,7 +19,7 @@ public interface TaxFormService {
     List<TaxFormDto> findAllTaxFormsByUserId(int userId);
 
     // Update TaxForm by ID:
-    TaxFormDto updateTaxFormById(int id, TaxFormDto updatedTaxForm);
+    TaxFormDto updateTaxFormById(int id);
 
     // Delete TaxForm by ID:
     void deleteTaxFormById(int id);

@@ -116,7 +116,7 @@ public class UserServiceTest {
         userDto.setFirstName("Test");
         userDto.setLastName("User");
         userDto.setEmail("email@test.com");
-        userDto.setUsername("testuser");
+        userDto.setUsername("email@test.com");
         userDto.setPassword("password");
         userDto.setAddress("123 Test St");
         userDto.setPhoneNumber("123-456-7890");
@@ -127,7 +127,7 @@ public class UserServiceTest {
         user.setFirstName("Test");
         user.setLastName("User");
         user.setEmail("email@test.com");
-        user.setUsername("testuser");
+        user.setUsername("email@test.com");
         user.setPassword(passwordEncoder.encode("password"));
         user.setAddress("123 Test St");
         user.setPhoneNumber("123-456-7890");
@@ -152,7 +152,7 @@ public class UserServiceTest {
         assertEquals("Test", result.getFirstName(), "First name should be Test");
         assertEquals("User", result.getLastName(), "Last name should be User");
         assertEquals("email@test.com", result.getEmail(), "Email should be email@test.com");
-        assertEquals("testuser", result.getUsername(), "Username should be testuser");
+        assertEquals("email@test.com", result.getUsername(), "Username should be email@test.com");
         assertEquals("123 Test St", result.getAddress(), "Address should be 123 Test St");
         assertEquals("123-456-7890", result.getPhoneNumber(), "Phone number should be 123-456-7890");
         assertEquals("123-45-6789", result.getSsn(), "SSN should be 123-45-6789");
@@ -188,10 +188,60 @@ public class UserServiceTest {
         assertEquals("Test", result.getFirstName(), "First name should be Test");
         assertEquals("User", result.getLastName(), "Last name should be User");
         assertEquals("email@test.com", result.getEmail(), "Email should be email@test.com");
-        assertEquals("testuser", result.getUsername(), "Username should be testuser");
+        assertEquals("email@test.com", result.getUsername(), "Username should be email@test.com");
         assertEquals("123 Test St", result.getAddress(), "Address should be 123 Test St");
         assertEquals("123-456-7890", result.getPhoneNumber(), "Phone number should be 123-456-7890");
         assertEquals("123-45-6789", result.getSsn(), "SSN should be 123-45-6789");
+    }
+
+    // Login success:
+    @Test
+    public void loginSuccessTest() {
+
+        UserDto credentials = new UserDto();
+        credentials.setEmail("email@test.com");
+        credentials.setPassword("password");
+
+        // Define Stubbing:
+        when(userRepository.findByUsername("email@test.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("password", user.getPassword())).thenReturn(true);
+
+        // Call the method to test:
+        UserDto result = userService.login(credentials);
+
+        // Verify the results:
+        assertEquals("email@test.com", result.getUsername(), "Username should be email@test.com");
+    }
+
+    // Login Invalid Username:
+    @Test
+    public void loginInvalidCredentialsTest() {
+
+        UserDto credentials = new UserDto();
+        credentials.setEmail("email@test.com");
+        credentials.setPassword("password");
+
+        // Define Stubbing:
+        when(userRepository.findByUsername("email@test.com")).thenReturn(Optional.empty());
+
+        // Verify the result:
+        assertThrows(IllegalArgumentException.class, () -> userService.login(credentials), "Should throw IllegalArgumentException");
+    }
+
+    // Login Invalid Password:
+    @Test
+    public void loginInvalidPasswordTest() {
+
+        UserDto credentials = new UserDto();
+        credentials.setEmail("email@test.com");
+        credentials.setPassword("password");
+
+        // Define Stubbing:
+        when(userRepository.findByUsername("email@test.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("password", user.getPassword())).thenReturn(false);
+
+        // Verify the result:
+        assertThrows(IllegalArgumentException.class, () -> userService.login(credentials), "Should throw IllegalArgumentException");
     }
 
     // Find User by ID Not Found:
@@ -210,13 +260,13 @@ public class UserServiceTest {
     public void loadUserByUsernameSuccessTest() {
 
         // Define stubbing:
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername("email@test.com")).thenReturn(Optional.of(user));
 
         // Call method to test:
         UserDetails result = userService.loadUserByUsername(user.getUsername());
 
         // Verify result:
-        assertEquals("testuser", result.getUsername(), "Username should be: testuser");
+        assertEquals("email@test.com", result.getUsername(), "Username should be: email@test.com");
     }
 
     // Load User by Username User Not Found:
@@ -224,7 +274,7 @@ public class UserServiceTest {
     public void loadUserByUsernameThrowsUsernameNotFoundTest() {
 
         // Define stubbing:
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.empty());
+        when(userRepository.findByUsername("email@test.com")).thenReturn(Optional.empty());
 
         // Verify result:
         assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(user.getUsername()), "Should throw UsernameNotFoundException");
@@ -246,7 +296,7 @@ public class UserServiceTest {
         assertEquals("Test", result.getFirstName(), "First name should be Test");
         assertEquals("User", result.getLastName(), "Last name should be User");
         assertEquals("email@test.com", result.getEmail(), "Email should be email@test.com");
-        assertEquals("testuser", result.getUsername(), "Username should be testuser");
+        assertEquals("email@test.com", result.getUsername(), "Username should be email@test.com");
         assertEquals("123 Test St", result.getAddress(), "Address should be 123 Test St");
         assertEquals("123-456-7890", result.getPhoneNumber(), "Phone number should be 123-456-7890");
         assertEquals("123-45-6789", result.getSsn(), "SSN should be 123-45-6789");
