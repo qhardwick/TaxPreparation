@@ -26,7 +26,7 @@ public class UserCredit {
     @Column(name = "credit_id")
     private int creditId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "credit_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Credit credit;
 

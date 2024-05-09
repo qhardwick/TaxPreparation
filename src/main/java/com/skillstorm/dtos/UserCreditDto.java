@@ -14,6 +14,7 @@ public class UserCreditDto {
     private int year;
     private int userId;
     private int creditId;
+    private String creditName;
     private int creditsClaimed;
     private BigDecimal totalValue;
 
@@ -27,6 +28,7 @@ public class UserCreditDto {
         this.year = userCredit.getYear();
         this.userId = userCredit.getUser().getId();
         this.creditId = userCredit.getCredit().getId();
+        this.creditName = userCredit.getCredit().getName();
         this.creditsClaimed = userCredit.getCreditsClaimed();
         this.totalValue = userCredit.getTotalValue();
     }

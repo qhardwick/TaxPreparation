@@ -15,6 +15,7 @@ public class UserDeductionDto {
     private int year;
     private int userId;
     private int deductionId;
+    private String deductionName;
     private BigDecimal amountSpent;
     private BigDecimal deductionAmount;
 
@@ -22,6 +23,7 @@ public class UserDeductionDto {
         this.id = userDeduction.getId();
         this.year = userDeduction.getYear();
         this.userId = userDeduction.getUser().getId();
+        this.deductionName = userDeduction.getDeduction().getName();
         this.deductionId = userDeduction.getDeduction().getId();
         this.amountSpent = userDeduction.getAmountSpent();
         this.deductionAmount = userDeduction.getDeductionAmount();
