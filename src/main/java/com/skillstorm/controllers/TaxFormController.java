@@ -26,6 +26,7 @@ public class TaxFormController {
 
     // Submit TaxForm:
     @PostMapping("/{userId}/{year}")
+    @PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<TaxFormDto> submitTaxForm(@PathVariable("userId") int userId, @PathVariable("year") int year) {
         TaxFormDto createdTaxForm = taxFormService.submitTaxForm(userId, year);
         return ResponseEntity.created(URI.create("/" + createdTaxForm.getId())).body(createdTaxForm);

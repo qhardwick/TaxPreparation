@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface UserDeductionRepository extends JpaRepository<UserDeduction, Integer> {
 
-    // Find all Deductions by User ID:
-    List<UserDeduction> findAllByUserId(int id);
+    // Find all Deductions by User ID and Year:
+    List<UserDeduction> findAllByUserIdAndYear(int id, int year);
 }

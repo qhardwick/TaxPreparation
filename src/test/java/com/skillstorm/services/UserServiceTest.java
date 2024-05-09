@@ -4,8 +4,6 @@ import com.skillstorm.dtos.*;
 import com.skillstorm.entities.User;
 import com.skillstorm.entities.UserCredit;
 import com.skillstorm.entities.UserDeduction;
-import com.skillstorm.exceptions.CreditNotFoundException;
-import com.skillstorm.exceptions.DeductionNotFoundException;
 import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.UserCreditRepository;
 import com.skillstorm.repositories.UserDeductionRepository;
@@ -23,9 +21,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -386,10 +381,10 @@ public class UserServiceTest {
 
         // Define stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(userCreditRepository.findAllByUserId(1)).thenReturn(List.of(userCredit));
+        when(userCreditRepository.findAllByUserIdAndYear(1, 2024)).thenReturn(List.of(userCredit));
 
         // Call method to test:
-        List<UserCreditDto> result = userService.findAllCreditsByUserId(1);
+        List<UserCreditDto> result = userService.findAllCreditsByUserIdAndYear(1, 2024);
 
         // Verify the result:
         assertEquals(1, result.size(), "Should return a list of size: 1");
@@ -420,16 +415,16 @@ public class UserServiceTest {
         assertEquals(BigDecimal.valueOf(500.00).setScale(2, RoundingMode.HALF_UP), result.getDeductionAmount(), "Total deduction should be: 500.00");
     }
 
-    // Find all Deductions claimed by a User:
+    // Find all Deductions claimed by a User for a given year:
     @Test
-    public void findAllDeductionsByUserIdTest() {
+    public void findAllDeductionsByUserIdAndYearTest() {
 
         // Define stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(userDeductionRepository.findAllByUserId(1)).thenReturn(List.of(userDeduction));
+        when(userDeductionRepository.findAllByUserIdAndYear(1, 2024)).thenReturn(List.of(userDeduction));
 
         // Call method to test:
-        List<UserDeductionDto> result = userService.findAllDeductionsByUserId(1);
+        List<UserDeductionDto> result = userService.findAllDeductionsByUserIdAndYear(1, 2024);
 
         // Verify the result:
         assertEquals(1, result.size(), "Should return a list of size: 1");

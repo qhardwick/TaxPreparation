@@ -273,10 +273,10 @@ public class UserControllerTest {
     public void findAllCreditsByUserIdTest() {
 
         // Define stubbing:
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtoList);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtoList);
 
         // Call method to test:
-        ResponseEntity<List<UserCreditDto>> result =  userController.findAllCreditsByUserId(1);
+        ResponseEntity<List<UserCreditDto>> result =  userController.findAllCreditsByUserId(1, 2024);
 
         // Verify result:
         assertEquals(200, result.getStatusCode().value(), "Response should be: 201");
@@ -315,10 +315,10 @@ public class UserControllerTest {
     public void findAllDeductionsByUserIdTest() {
 
         // Define stubbing:
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtoList);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtoList);
 
         // Call method to test:
-        ResponseEntity<List<UserDeductionDto>> result =  userController.findAllDeductionsByUserId(1);
+        ResponseEntity<List<UserDeductionDto>> result =  userController.findAllDeductionsByUserIdAndYear(1, 2024);
 
         // Verify result:
         assertEquals(200, result.getStatusCode().value(), "Response should be: 201");

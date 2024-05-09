@@ -32,12 +32,18 @@ public interface UserService {
     // Add Tax Credit to User:
     UserCreditDto addTaxCredit(int id, UserCreditDto creditToBeAdded);
 
-    // Find all UserCredits by User ID:
-    List<UserCreditDto> findAllCreditsByUserId(int id);
+    // Find all UserCredits by User ID and Year:
+    List<UserCreditDto> findAllCreditsByUserIdAndYear(int id, int year);
+
+    // Remove Tax Credit from User:
+    void removeTaxCredit(int id, int creditId);
 
     // Add Deduction to User:
     UserDeductionDto addDeduction(int id, UserDeductionDto deductionToBeAdded);
 
     // Find all UserDeductions by User ID:
-    List<UserDeductionDto> findAllDeductionsByUserId(int id);
+    List<UserDeductionDto> findAllDeductionsByUserIdAndYear(int id, int year);
+
+    // Remove Deduction from User:
+    void removeDeduction(int id, int deductionId);
 }

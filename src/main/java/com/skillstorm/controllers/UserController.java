@@ -85,11 +85,19 @@ public class UserController {
         return ResponseEntity.ok(userService.addTaxCredit(id, creditToBeAdded));
     }
 
-    // Find all UserCredits by User ID:
-    @GetMapping("/{id}/credits")
+    // Find all UserCredits by User ID And Year:
+    @GetMapping("/{id}/credits/{year}")
     @PreAuthorize("#id == authentication.principal.id")
-    public ResponseEntity<List<UserCreditDto>> findAllCreditsByUserId(@PathVariable int id) {
-        return ResponseEntity.ok(userService.findAllCreditsByUserId(id));
+    public ResponseEntity<List<UserCreditDto>> findAllCreditsByUserId(@PathVariable int id, @PathVariable int year) {
+        return ResponseEntity.ok(userService.findAllCreditsByUserIdAndYear(id, year));
+    }
+
+    // Remove Tax Credit from User:
+    @DeleteMapping("/{id}/credits/{creditId}")
+    @PreAuthorize("#id == authentication.principal.id")
+    public ResponseEntity<Void> removeTaxCredit(@PathVariable int id, @PathVariable int creditId) {
+        userService.removeTaxCredit(id, creditId);
+        return ResponseEntity.noContent().build();
     }
 
     // Add Deduction to User:
@@ -99,11 +107,19 @@ public class UserController {
         return ResponseEntity.ok(userService.addDeduction(id, deductionToBeAdded));
     }
 
-    // Find all UserDeductions by User ID:
-    @GetMapping("/{id}/deductions")
+    // Find all UserDeductions by User ID And Year:
+    @GetMapping("/{id}/deductions/{year}")
     @PreAuthorize("#id == authentication.principal.id")
-    public ResponseEntity<List<UserDeductionDto>> findAllDeductionsByUserId(@PathVariable int id) {
-        return ResponseEntity.ok(userService.findAllDeductionsByUserId(id));
+    public ResponseEntity<List<UserDeductionDto>> findAllDeductionsByUserIdAndYear(@PathVariable int id, @PathVariable int year) {
+        return ResponseEntity.ok(userService.findAllDeductionsByUserIdAndYear(id, year));
+    }
+
+    // Remove Deduction from User:
+    @DeleteMapping("/{id}/deductions/{deductionId}")
+    @PreAuthorize("#id == authentication.principal.id")
+    public ResponseEntity<Void> removeDeduction(@PathVariable int id, @PathVariable int deductionId) {
+        userService.removeDeduction(id, deductionId);
+        return ResponseEntity.noContent().build();
     }
 
 }

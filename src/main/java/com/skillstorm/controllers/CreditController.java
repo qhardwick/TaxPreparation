@@ -43,14 +43,14 @@ public class CreditController {
 
     // Update Credit By Id:
     @PutMapping("/{id}")
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("authentication.principal.role == 'ADMIN'")
     public ResponseEntity<CreditDto> updateCreditById(@PathVariable int id, @RequestBody CreditDto updatedCredit) {
         return ResponseEntity.ok(creditService.updateCreditById(id, updatedCredit));
     }
 
     // Delete Credit By Id:
     @DeleteMapping("/{id}")
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("authentication.principal.role == 'ADMIN'")
     public ResponseEntity<Void> deleteCreditById(@PathVariable int id) {
         creditService.deleteCreditById(id);
         return ResponseEntity.noContent().build();

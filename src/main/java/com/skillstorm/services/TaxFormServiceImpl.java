@@ -2,22 +2,17 @@ package com.skillstorm.services;
 
 import com.skillstorm.dtos.*;
 import com.skillstorm.exceptions.TaxFormNotFoundException;
-import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.TaxFormArchiveRepository;
 import com.skillstorm.repositories.TaxFormRepository;
 import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -46,6 +41,7 @@ public class TaxFormServiceImpl implements TaxFormService {
 
     // Find TaxForm by ID:
     @Override
+    @PostAuthorize("returnObject.taxForm.user.id == authentication.principal.id")
     public TaxFormDto findTaxFormById(int id) {
         return taxFormRepository.findById(id).map(TaxFormDto::new)
                 .orElseThrow(() -> new TaxFormNotFoundException(environment.getProperty(SystemMessages.TAX_FORM_NOT_FOUND.toString())));
@@ -119,17 +115,15 @@ public class TaxFormServiceImpl implements TaxFormService {
     // Utility method to update the TaxFormDto object with credits and deductions:
     private void setCreditsAndDeductions(int userId, TaxFormDto taxFormDto) {
         // Set credits based on userDto object:
-        List<UserCreditDto> userCreditDtoList = userService.findAllCreditsByUserId(userId);
+        List<UserCreditDto> userCreditDtoList = userService.findAllCreditsByUserIdAndYear(userId, taxFormDto.getYear());
         BigDecimal credits = userCreditDtoList.stream()
-                .filter(userCreditDto -> userCreditDto.getYear() == taxFormDto.getYear())
                 .map(UserCreditDto::getTotalValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setCredits(credits);
 
         // Set deductions based on userDto object:
-        List<UserDeductionDto> userDeductionDtoList = userService.findAllDeductionsByUserId(userId);
+        List<UserDeductionDto> userDeductionDtoList = userService.findAllDeductionsByUserIdAndYear(userId, taxFormDto.getYear());
         BigDecimal deductions = userDeductionDtoList.stream()
-                .filter(userDeductionDto -> userDeductionDto.getYear() == taxFormDto.getYear())
                 .map(UserDeductionDto::getDeductionAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         taxFormDto.setDeductions(deductions);

@@ -4,15 +4,12 @@ import com.skillstorm.dtos.*;
 import com.skillstorm.entities.User;
 import com.skillstorm.entities.UserCredit;
 import com.skillstorm.entities.UserDeduction;
-import com.skillstorm.exceptions.CreditNotFoundException;
-import com.skillstorm.exceptions.DeductionNotFoundException;
 import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.UserCreditRepository;
 import com.skillstorm.repositories.UserDeductionRepository;
 import com.skillstorm.repositories.UserRepository;
 import com.skillstorm.configs.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,8 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -170,11 +165,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new UserCreditDto(userCreditRepository.saveAndFlush(userCredit));
     }
 
-    // Find all UserCredits by User ID:
+    // Find all UserCredits by User ID and Year:
     @Override
-    public List<UserCreditDto> findAllCreditsByUserId(int id) {
+    public List<UserCreditDto> findAllCreditsByUserIdAndYear(int id, int year) {
         findUserById(id);
-        return userCreditRepository.findAllByUserId(id).stream().map(UserCreditDto::new).toList();
+        return userCreditRepository.findAllByUserIdAndYear(id, year).stream().map(UserCreditDto::new).toList();
+    }
+
+    // Remove Tax Credit from User:
+    @Override
+    public void removeTaxCredit(int id, int creditId) {
+        User user = findUserById(id).getUser();
+        UserCredit userCredit = userCreditRepository.findById(creditId)
+                .orElseThrow(() -> new IllegalArgumentException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString())));
+
+        if (userCredit.getUser().getId() != user.getId()) {
+            throw new IllegalArgumentException(environment.getProperty(SystemMessages.CREDIT_NOT_FOUND.toString()));
+        }
+
+        userCreditRepository.deleteById(creditId);
     }
 
     // Add Deduction to User:
@@ -198,8 +207,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     // Find all UserDeductions by User ID:
     @Override
-    public List<UserDeductionDto> findAllDeductionsByUserId(int id) {
+    public List<UserDeductionDto> findAllDeductionsByUserIdAndYear(int id, int year) {
         findUserById(id);
-        return userDeductionRepository.findAllByUserId(id).stream().map(UserDeductionDto::new).toList();
+        return userDeductionRepository.findAllByUserIdAndYear(id, year).stream().map(UserDeductionDto::new).toList();
+    }
+
+    // Remove Deduction from User:
+    @Override
+    public void removeDeduction(int id, int deductionId) {
+        User user = findUserById(id).getUser();
+        UserDeduction userDeduction = userDeductionRepository.findById(deductionId)
+                .orElseThrow(() -> new IllegalArgumentException(environment.getProperty(SystemMessages.DEDUCTION_NOT_FOUND.toString())));
+        if (userDeduction.getUser().getId() != user.getId()) {
+            throw new IllegalArgumentException(environment.getProperty(SystemMessages.DEDUCTION_NOT_FOUND.toString()));
+        }
+        userDeductionRepository.deleteById(deductionId);
     }
 }

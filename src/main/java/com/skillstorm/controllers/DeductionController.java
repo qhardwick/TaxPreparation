@@ -43,14 +43,14 @@ public class DeductionController {
 
     // Update Deduction by ID:
     @PutMapping("/{id}")
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("authentication.principal.role == 'ADMIN'")
     public ResponseEntity<DeductionDto> updateDeductionById(@PathVariable int id, @RequestBody DeductionDto updatedDeduction) {
         return ResponseEntity.ok(deductionService.updateDeductionById(id, updatedDeduction));
     }
 
     // Delete Deduction by ID:
     @DeleteMapping("/{id}")
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("authentication.principal.role == 'ADMIN'")
     public ResponseEntity<Void> deleteDeductionById(@PathVariable int id) {
         deductionService.deleteDeductionById(id);
         return ResponseEntity.noContent().build();

@@ -5,21 +5,16 @@ import com.skillstorm.entities.TaxForm;
 import com.skillstorm.entities.User;
 import com.skillstorm.entities.W2;
 import com.skillstorm.exceptions.TaxFormNotFoundException;
-import com.skillstorm.exceptions.UserNotFoundException;
 import com.skillstorm.repositories.TaxFormArchiveRepository;
 import com.skillstorm.repositories.TaxFormRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -198,8 +193,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1, 2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
         when(taxFormRepository.saveAndFlush(any(TaxForm.class))).thenReturn(returnedTaxForm);
 
         // Call the method to test:
@@ -257,8 +252,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1, 2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 2024);
@@ -282,8 +277,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1,2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 2024);
@@ -305,8 +300,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1,2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 2024);
@@ -330,8 +325,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1,2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 2024);
@@ -355,8 +350,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1, 2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 2024);
@@ -380,8 +375,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1, 2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 2024);
@@ -405,8 +400,8 @@ public class TaxFormServiceTest {
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1, 2024)).thenReturn(Optional.empty());
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
 
         // Call the method to test:
         TaxFormDto result = taxFormService.populateTaxFormByUserId(1, 2024);
@@ -451,8 +446,8 @@ public class TaxFormServiceTest {
         when(taxFormRepository.findById(1)).thenReturn(Optional.of(returnedTaxForm));
         when(taxFormRepository.findByUserIdAndYear(1,2024)).thenReturn(Optional.of(returnedTaxForm));
         when(userService.findUserById(1)).thenReturn(userDto);
-        when(userService.findAllCreditsByUserId(1)).thenReturn(userCreditDtos);
-        when(userService.findAllDeductionsByUserId(1)).thenReturn(userDeductionDtos);
+        when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtos);
+        when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtos);
         when(taxFormRepository.saveAndFlush(any(TaxForm.class))).thenReturn(returnedTaxForm);
 
         // Call the method to test:
