@@ -5,6 +5,7 @@ import com.skillstorm.services.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class CreditController {
 
     // Add Credit:
     @PostMapping
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("authentication.principal.role == 'ADMIN'")
     public ResponseEntity<CreditDto> addCredit(@RequestBody CreditDto credit) {
         return ResponseEntity.ok(creditService.addCredit(credit));
     }
