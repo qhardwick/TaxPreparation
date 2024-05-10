@@ -134,9 +134,23 @@ public class UserServiceTest {
     @Test
     public void addUserSuccessTest() {
 
-        // Define Stubbing:
+        // User dto for method call:
+        userDto = new UserDto();
+        userDto.setEmail("email@test.com");
+        userDto.setPassword("password");
+
+        // User that will be saved:
         User userToSave = userDto.getUser();
+        userToSave.setUsername("email@test.com");
         userToSave.setPassword(passwordEncoder.encode("password"));
+
+        // User that will be returned:
+        user = new User();
+        user.setId(1);
+        user.setEmail("email@test.com");
+        user.setUsername("email@test.com");
+
+        // Define Stubbing:
         when(userRepository.saveAndFlush(userToSave)).thenReturn(user);
 
         // Call the method to test:
@@ -144,13 +158,8 @@ public class UserServiceTest {
 
         // Verify the results:
         assertEquals(1, result.getId(), "User ID should be 1");
-        assertEquals("Test", result.getFirstName(), "First name should be Test");
-        assertEquals("User", result.getLastName(), "Last name should be User");
         assertEquals("email@test.com", result.getEmail(), "Email should be email@test.com");
         assertEquals("email@test.com", result.getUsername(), "Username should be email@test.com");
-        assertEquals("123 Test St", result.getAddress(), "Address should be 123 Test St");
-        assertEquals("123-456-7890", result.getPhoneNumber(), "Phone number should be 123-456-7890");
-        assertEquals("123-45-6789", result.getSsn(), "SSN should be 123-45-6789");
         assertEquals(0, result.getW2s().size(), "W2s should be empty");
     }
 
@@ -165,6 +174,56 @@ public class UserServiceTest {
 
         // Verify the result:
         assertThrows(IllegalArgumentException.class, () -> userService.addUser(userDto), "Should throw IllegalArgumentException.class");
+    }
+
+    // Add new Admin Success:
+    @Test
+    public void addAdminSuccessTest() {
+
+        // User dto for method call:
+        userDto = new UserDto();
+        userDto.setEmail("email@test.com");
+        userDto.setPassword("password");
+
+        // User that will be saved:
+        User userToSave = userDto.getUser();
+        userToSave.setUsername("email@test.com");
+        userToSave.setPassword(passwordEncoder.encode("password"));
+        userToSave.setRole("ADMIN");
+
+        // User that will be returned:
+        user = new User();
+        user.setId(1);
+        user.setEmail("email@test.com");
+        user.setUsername("email@test.com");
+        user.setRole("ADMIN");
+
+        // Define Stubbing:
+        when(userRepository.saveAndFlush(userToSave)).thenReturn(user);
+
+        // Call the method to test:
+        UserDto result = userService.addAdmin(userDto);
+
+        // Verify the results:
+        assertEquals(1, result.getId(), "User ID should be 1");
+        assertEquals("email@test.com", result.getEmail(), "Email should be email@test.com");
+        assertEquals("email@test.com", result.getUsername(), "Username should be email@test.com");
+        assertEquals("ADMIN", result.getRole(), "Role should be ADMIN");
+        assertEquals(0, result.getW2s().size(), "W2s should be empty");
+    }
+
+    // Add Admin violates unique constraint:
+    @Test
+    public void addAdminThrowsIllegalArgumentException() {
+
+        // Define Stubbing:
+        User userToSave = userDto.getUser();
+        userToSave.setPassword(passwordEncoder.encode("password"));
+        userToSave.setRole("ADMIN");
+        doThrow(DataIntegrityViolationException.class).when(userRepository).saveAndFlush(userToSave);
+
+        // Verify the result:
+        assertThrows(IllegalArgumentException.class, () -> userService.addAdmin(userDto), "Should throw IllegalArgumentException.class");
     }
 
 
@@ -375,7 +434,7 @@ public class UserServiceTest {
         assertEquals(BigDecimal.valueOf(2000.00).setScale(2, RoundingMode.HALF_UP), result.getTotalValue(), "Total value should be: 2000.00");
     }
 
-    // Find all Credits claimed by a User:
+    // Find all Credits claimed by a User for a given year:
     @Test
     public void findAllCreditsByUserIdTest() {
 
@@ -388,6 +447,21 @@ public class UserServiceTest {
 
         // Verify the result:
         assertEquals(1, result.size(), "Should return a list of size: 1");
+    }
+
+    // Remove Tax Credit from User Success:
+    @Test
+    public void removeTaxCreditSuccessTest() {
+
+        // Define Stubbings:
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(userCreditRepository.findById(1)).thenReturn(Optional.of(userCredit));
+
+        // Call the method to test:
+        userService.removeTaxCredit(1, 1);
+
+        // Verify result:
+        verify(userCreditRepository).deleteById(1);
     }
 
     // Add Tax Deduction to User Success:
@@ -428,5 +502,20 @@ public class UserServiceTest {
 
         // Verify the result:
         assertEquals(1, result.size(), "Should return a list of size: 1");
+    }
+
+    // Remove Tax Deduction from User Success:
+    @Test
+    public void removeTaxDeductionSuccessTest() {
+
+        // Define Stubbings:
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(userDeductionRepository.findById(1)).thenReturn(Optional.of(userDeduction));
+
+        // Call the method to test:
+        userService.removeDeduction(1, 1);
+
+        // Verify result:
+        verify(userDeductionRepository).deleteById(1);
     }
 }

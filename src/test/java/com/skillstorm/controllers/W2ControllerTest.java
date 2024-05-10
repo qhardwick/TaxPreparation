@@ -2,14 +2,17 @@ package com.skillstorm.controllers;
 
 import com.skillstorm.dtos.W2Dto;
 import com.skillstorm.services.W2Service;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
@@ -174,5 +177,25 @@ public class W2ControllerTest {
         // Verify the response:
         assertEquals(201, response.getStatusCode().value(), "Response should be: 201");
         assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Response should be CREATED");
+    }
+
+    // Test downloadW2Image method
+    @Test
+    @SneakyThrows
+    public void testDownloadW2Image() {
+        // Mocked image resource
+        byte[] imageData = {1, 2, 3}; // Example image data
+        ByteArrayResource resource = new ByteArrayResource(imageData);
+
+        // Stubbing the downloadW2Image method
+        when(w2Service.downloadW2Image(1)).thenReturn(resource);
+
+        // Call the method to test
+        W2Controller controller = new W2Controller(w2Service);
+        ResponseEntity<Resource> responseEntity = controller.downloadW2Image(1);
+
+        // Verify the response
+        assertEquals(200, responseEntity.getStatusCodeValue(), "Response should be OK");
+        assertEquals(imageData.length, responseEntity.getBody().contentLength(), "Content length should match");
     }
 }

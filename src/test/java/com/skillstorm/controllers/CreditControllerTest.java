@@ -1,7 +1,6 @@
 package com.skillstorm.controllers;
 
 import com.skillstorm.dtos.CreditDto;
-import com.skillstorm.entities.Credit;
 import com.skillstorm.services.CreditService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

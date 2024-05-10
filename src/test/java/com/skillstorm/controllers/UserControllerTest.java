@@ -146,6 +146,28 @@ public class UserControllerTest {
 
     }
 
+    // Test Add new Admin:
+    @Test
+    public void addNewAdminTest() {
+
+        returnedNewUser.setRole("ADMIN");
+
+        // Define stubbing:
+        when(userService.addAdmin(newUser)).thenReturn(returnedNewUser);
+
+        // Call method to test:
+        ResponseEntity<UserDto> result = userController.addAdmin(newUser);
+
+        // Verify result:
+        assertEquals(201, result.getStatusCode().value(), "Response should be: 201");
+        assertEquals(HttpStatus.CREATED, result.getStatusCode(), "Response should be CREATED");
+        assertEquals("/1", result.getHeaders().get("Location").get(0), "Should create URI: '/1");
+        assertEquals(1, result.getBody().getId(), "User ID should be: 1");
+        assertEquals("test@email.com", result.getBody().getEmail(), "Email should be: test@email.com");
+        assertEquals("test@email.com", result.getBody().getUsername(), "Username should be: test@email.com");
+        assertEquals("ADMIN", result.getBody().getRole(), "Role should be: ADMIN");
+    }
+
     // Test Find User by ID:
     @Test
     public void findUserByIdTest() {
@@ -289,6 +311,26 @@ public class UserControllerTest {
         assertEquals(BigDecimal.valueOf(1000), result.getBody().get(0).getTotalValue(), "Total value should be: 1000");
     }
 
+    // Test Remove Tax Credit:
+    @Test
+    public void removeTaxCreditTest() {
+
+        // Call method to test:
+        ResponseEntity<Void> result =  userController.removeTaxCredit(1, 1);
+
+        // Verify that the service method was called with the correct arguments:
+        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<Integer> creditIdCaptor = ArgumentCaptor.forClass(Integer.class);
+        verify(userService).removeTaxCredit(idCaptor.capture(), creditIdCaptor.capture());
+
+        // Verify result:
+        assertEquals(204, result.getStatusCode().value(), "Response should be: 201");
+        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode(), "Response should be NO_CONTENT");
+        assertNull(result.getBody(), "Response body should be: null");
+        assertEquals(1, idCaptor.getValue(), "ID should be: 1");
+        assertEquals(1, creditIdCaptor.getValue(), "Credit ID should be: 1");
+    }
+
     // Test Add Deduction:
     @Test
     public void addDeductionTest() {
@@ -329,5 +371,25 @@ public class UserControllerTest {
         assertEquals(1, result.getBody().get(0).getDeductionId(), "Deduction ID should be: 1");
         assertEquals(BigDecimal.valueOf(1000), result.getBody().get(0).getAmountSpent(), "Amount spent should be: 1000");
         assertEquals(BigDecimal.valueOf(500), result.getBody().get(0).getDeductionAmount(), "Deduction amount should be: 500");
+    }
+
+    // Test Remove Deduction:
+    @Test
+    public void removeDeductionTest() {
+
+        // Call method to test:
+        ResponseEntity<Void> result =  userController.removeDeduction(1, 1);
+
+        // Verify that the service method was called with the correct arguments:
+        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<Integer> deductionIdCaptor = ArgumentCaptor.forClass(Integer.class);
+        verify(userService).removeDeduction(idCaptor.capture(), deductionIdCaptor.capture());
+
+        // Verify result:
+        assertEquals(204, result.getStatusCode().value(), "Response should be: 201");
+        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode(), "Response should be NO_CONTENT");
+        assertNull(result.getBody(), "Response body should be: null");
+        assertEquals(1, idCaptor.getValue(), "ID should be: 1");
+        assertEquals(1, deductionIdCaptor.getValue(), "Deduction ID should be: 1");
     }
 }
