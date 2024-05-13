@@ -48,7 +48,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
-    // Find User by Username:
+    // User login:
     @PostMapping("/login")
     public ResponseEntity<UserDto> login(@RequestBody UserDto authCredentials) {
         return ResponseEntity.ok(userService.login(authCredentials));
