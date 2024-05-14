@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
@@ -63,7 +62,7 @@ public class W2ControllerTest {
 
     // Add new W2:
     @Test
-    public void addW2Test() {
+    void addW2Test() {
 
         // Define stubbing:
         when(w2Service.addW2(newW2)).thenReturn(returnedW2);
@@ -87,7 +86,7 @@ public class W2ControllerTest {
 
     // Find W2 by ID:
     @Test
-    public void findW2ByIdTest() {
+    void findW2ByIdTest() {
 
         // Define stubbing:
         when(w2Service.findW2ById(1)).thenReturn(returnedW2);
@@ -110,7 +109,7 @@ public class W2ControllerTest {
 
     // Find all by User ID:
     @Test
-    public void findW2ByUserIdTest() {
+    void findW2ByUserIdTest() {
 
         // Define stubbing:
         when(w2Service.findW2ByUserId(1)).thenReturn(returnedW2s);
@@ -134,7 +133,7 @@ public class W2ControllerTest {
 
     // Update W2 by ID:
     @Test
-    public void updateW2ByIdTest() {
+    void updateW2ByIdTest() {
 
         // Define stubbing:
         when(w2Service.updateW2ById(1, returnedW2)).thenReturn(returnedW2);
@@ -157,7 +156,7 @@ public class W2ControllerTest {
 
     // Delete W2 by ID:
     @Test
-    public void deleteW2ByIdTest() {
+    void deleteW2ByIdTest() {
 
         // Call the method to test:
         ResponseEntity<Void> response = w2Controller.deleteW2ById(1);
@@ -169,7 +168,7 @@ public class W2ControllerTest {
 
     // Upload image of W2:
     @Test
-    public void uploadW2ImageTest() {
+    void uploadW2ImageTest() {
 
         // Call the method to test:
         ResponseEntity<Void> response = w2Controller.uploadW2Image(1, new byte[0], "image/jpeg");
@@ -182,7 +181,7 @@ public class W2ControllerTest {
     // Test downloadW2Image method
     @Test
     @SneakyThrows
-    public void testDownloadW2Image() {
+    void testDownloadW2Image() {
         // Mocked image resource
         byte[] imageData = {1, 2, 3}; // Example image data
         ByteArrayResource resource = new ByteArrayResource(imageData);

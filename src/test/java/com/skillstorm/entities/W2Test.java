@@ -8,7 +8,7 @@ public class W2Test {
 
     // Test the no-arg constructor:
     @Test
-    public void testW2() {
+    void testW2() {
         W2 w2 = new W2();
         assertEquals(0, w2.getId());
         assertEquals(null, w2.getEmployer());

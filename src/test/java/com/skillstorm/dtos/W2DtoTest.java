@@ -11,7 +11,7 @@ public class W2DtoTest {
 
     // Test the no-args constructor:
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         W2Dto w2Dto = new W2Dto();
         assertEquals(0, w2Dto.getId());
         assertEquals(null, w2Dto.getEmployer());
@@ -26,7 +26,7 @@ public class W2DtoTest {
 
     // Test the W2Dto(W2) constructor:
     @Test
-    public void testW2DtoConstructor() {
+    void testW2DtoConstructor() {
         W2 w2 = new W2();
         w2.setId(1);
         w2.setEmployer("Test Employer");
@@ -53,7 +53,7 @@ public class W2DtoTest {
 
     // Test the getW2() method:
     @Test
-    public void testGetW2() {
+    void testGetW2() {
         W2Dto w2Dto = new W2Dto();
         w2Dto.setId(1);
         w2Dto.setEmployer("Test Employer");

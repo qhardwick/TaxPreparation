@@ -34,7 +34,7 @@ public class S3ServiceTest {
     }
 
     @Test
-    public void testUploadFile() {
+    void testUploadFile() {
         // Arrange
         String key = "test-key";
         byte[] fileContent = "Test File Content".getBytes();
@@ -44,21 +44,5 @@ public class S3ServiceTest {
 
         // Assert
         verify(s3Client).putObject(any(PutObjectRequest.class), any(RequestBody.class));
-    }
-
-    //@Test
-    public void testGetObject() {
-        // Arrange
-        String key = "test-key";
-        InputStream inputStream = new ByteArrayInputStream("Test File Content".getBytes());
-        //GetObjectResponse getObjectResponse = GetObjectResponse.builder().responseInputStream(inputStream).build();
-        //when(s3Client.getObject(any(GetObjectRequest.class))).thenReturn(getObjectResponse);
-
-        // Act
-        InputStream result = s3Service.getObject(key);
-
-        // Assert
-        assertNotNull(result);
-        // You can add further assertions on the InputStream if required
     }
 }

@@ -61,13 +61,13 @@ public class W2ServiceTest {
     }
 
     @AfterEach
-    public void resetMocks() {
+    void resetMocks() {
         reset(w2Repository, environment);
     }
 
     // Add W2:
     @Test
-    public void addW2Test() {
+    void addW2Test() {
 
         //Define stubbing:
         when(w2Repository.saveAndFlush(w2Dto.getW2())).thenReturn(w2);
@@ -88,7 +88,7 @@ public class W2ServiceTest {
 
     // Get W2 By Id and Succeed:
     @Test
-    public void findW2ByIdSuccessTest() {
+    void findW2ByIdSuccessTest() {
 
         //Define stubbing:
         when(w2Repository.findById(1)).thenReturn(Optional.of(w2));
@@ -109,7 +109,7 @@ public class W2ServiceTest {
 
     // Get W2 By Id Not Exists:
     @Test
-    public void findW2ByIdNotFoundTest() {
+    void findW2ByIdNotFoundTest() {
 
         //Define stubbing:
         when(w2Repository.findById(1)).thenReturn(Optional.empty());
@@ -120,7 +120,7 @@ public class W2ServiceTest {
 
     // Find all by User ID:
     @Test
-    public void findW2ByUserIdTest() {
+    void findW2ByUserIdTest() {
 
         //Define stubbing:
         when(w2Repository.findAllByUserId(1)).thenReturn(List.of(w2));
@@ -141,7 +141,7 @@ public class W2ServiceTest {
 
     // Update W2 by ID:
     @Test
-    public void updateW2ByIdTest() {
+    void updateW2ByIdTest() {
 
         //Define stubbing:
         when(w2Repository.findById(1)).thenReturn(Optional.of(w2));
@@ -163,7 +163,7 @@ public class W2ServiceTest {
 
     // Delete W2 by ID:
     @Test
-    public void deleteW2ByIdTest() {
+    void deleteW2ByIdTest() {
 
         //Define stubbing:
         when(w2Repository.findById(1)).thenReturn(Optional.of(w2));
@@ -183,7 +183,7 @@ public class W2ServiceTest {
 
     // Upload W2 Image:
     @Test
-    public void uploadW2ImageTest() {
+    void uploadW2ImageTest() {
 
         //Define stubbing:
         when(w2Repository.findById(1)).thenReturn(Optional.of(w2));
@@ -221,7 +221,7 @@ public class W2ServiceTest {
     // Download W2 Image Success:
     @Test
     @SneakyThrows
-    public void testDownloadW2ImageSuccess() {
+    void testDownloadW2ImageSuccess() {
 
         byte[] imageBytes = {1, 2, 3};
         Resource resource = new ByteArrayResource(imageBytes);

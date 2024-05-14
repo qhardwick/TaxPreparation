@@ -28,7 +28,7 @@ public class UserCreditDtoTest {
 
     // Test the no-args constructor:
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         UserCreditDto userCreditDto = new UserCreditDto();
         assertEquals(0, userCreditDto.getId());
         assertEquals(0, userCreditDto.getYear());
@@ -39,7 +39,7 @@ public class UserCreditDtoTest {
 
     // Test the UserCreditDto(UserCredit) constructor:
     @Test
-    public void testUserCreditDtoConstructor() {
+    void testUserCreditDtoConstructor() {
         UserCredit userCredit = new UserCredit();
         userCredit.setId(1);
         userCredit.setYear(2024);
@@ -61,7 +61,7 @@ public class UserCreditDtoTest {
 
     // Test the getUserCredit method
     @Test
-    public void testGetUserCredit() {
+    void testGetUserCredit() {
         UserCreditDto userCreditDto = new UserCreditDto();
         userCreditDto.setId(1);
         userCreditDto.setYear(2024);

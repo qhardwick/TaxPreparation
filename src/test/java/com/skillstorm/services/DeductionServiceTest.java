@@ -56,7 +56,7 @@ public class DeductionServiceTest {
 
     // Add Deduction:
     @Test
-    public void addDeductionTest() {
+    void addDeductionTest() {
 
         //Define stubbing:
         when(deductionRepository.saveAndFlush(deductionDto.getDeduction())).thenReturn(deduction);
@@ -72,7 +72,7 @@ public class DeductionServiceTest {
 
     // Find Deduction by ID Success:
     @Test
-    public void findDeductionByIdSuccessTest() {
+    void findDeductionByIdSuccessTest() {
 
         //Define stubbing:
         when(deductionRepository.findById(1)).thenReturn(java.util.Optional.of(deduction));
@@ -88,7 +88,7 @@ public class DeductionServiceTest {
 
     // Find Deduction by ID Not Exists:
     @Test
-    public void findDeductionByIdNotExistsTest() {
+    void findDeductionByIdNotExistsTest() {
 
         //Define stubbing:
         when(deductionRepository.findById(1)).thenReturn(java.util.Optional.empty());
@@ -99,7 +99,7 @@ public class DeductionServiceTest {
 
     // Find All Deductions:
     @Test
-    public void findAllDeductionsTest() {
+    void findAllDeductionsTest() {
 
         //Define stubbing:
         when(deductionRepository.findAll()).thenReturn(java.util.List.of(deduction));
@@ -115,7 +115,7 @@ public class DeductionServiceTest {
 
     // Update Deduction by ID:
     @Test
-    public void updateDeductionByIdTest() {
+    void updateDeductionByIdTest() {
 
         //Define stubbing:
         when(deductionRepository.findById(1)).thenReturn(java.util.Optional.of(deduction));
@@ -132,7 +132,7 @@ public class DeductionServiceTest {
 
     // Delete Deduction by ID:
     @Test
-    public void deleteDeductionByIdTest() {
+    void deleteDeductionByIdTest() {
 
         //Define stubbing:
         when(deductionRepository.findById(1)).thenReturn(java.util.Optional.of(deduction));

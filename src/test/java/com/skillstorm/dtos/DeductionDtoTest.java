@@ -11,7 +11,7 @@ public class DeductionDtoTest {
 
     // Test the no-args constructor:
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         DeductionDto deductionDto = new DeductionDto();
         assertEquals(0, deductionDto.getId());
         assertEquals(null, deductionDto.getName());
@@ -20,7 +20,7 @@ public class DeductionDtoTest {
 
     // Test the DeductionDto(Deduction) constructor:
     @Test
-    public void testDeductionDtoConstructor() {
+    void testDeductionDtoConstructor() {
         Deduction deduction = new Deduction();
         deduction.setId(1);
         deduction.setName("Test Deduction");
@@ -35,7 +35,7 @@ public class DeductionDtoTest {
 
     // Test the getDeduction method
     @Test
-    public void testGetDeduction() {
+    void testGetDeduction() {
         DeductionDto deductionDto = new DeductionDto();
         deductionDto.setId(1);
         deductionDto.setName("Test Deduction");

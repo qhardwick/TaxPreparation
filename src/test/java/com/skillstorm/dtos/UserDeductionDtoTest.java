@@ -27,7 +27,7 @@ public class UserDeductionDtoTest {
 
     // Test the no-args constructor:
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         UserDeductionDto userDeductionDto = new UserDeductionDto();
         assertEquals(0, userDeductionDto.getId());
         assertEquals(0, userDeductionDto.getYear());
@@ -37,7 +37,7 @@ public class UserDeductionDtoTest {
 
     // Test the UserDeductionDto(UserDeduction) constructor:
     @Test
-    public void testUserDeductionDtoConstructor() {
+    void testUserDeductionDtoConstructor() {
         UserDeduction userDeduction = new UserDeduction();
         userDeduction.setId(1);
         userDeduction.setYear(2024);
@@ -59,7 +59,7 @@ public class UserDeductionDtoTest {
 
     // Test the getUserDeduction() method:
     @Test
-    public void testGetUserDeduction() {
+    void testGetUserDeduction() {
         UserDeductionDto userDeductionDto = new UserDeductionDto();
         userDeductionDto.setId(1);
         userDeductionDto.setYear(2024);

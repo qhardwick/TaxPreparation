@@ -132,7 +132,7 @@ public class UserServiceTest {
 
     // Add new User:
     @Test
-    public void addUserSuccessTest() {
+    void addUserSuccessTest() {
 
         // User dto for method call:
         userDto = new UserDto();
@@ -165,7 +165,7 @@ public class UserServiceTest {
 
     // Add User violates unique constraint:
     @Test
-    public void addUserThrowsIllegalArgumentException() {
+    void addUserThrowsIllegalArgumentException() {
 
         // Define Stubbing:
         User userToSave = userDto.getUser();
@@ -178,7 +178,7 @@ public class UserServiceTest {
 
     // Add new Admin Success:
     @Test
-    public void addAdminSuccessTest() {
+    void addAdminSuccessTest() {
 
         // User dto for method call:
         userDto = new UserDto();
@@ -214,7 +214,7 @@ public class UserServiceTest {
 
     // Add Admin violates unique constraint:
     @Test
-    public void addAdminThrowsIllegalArgumentException() {
+    void addAdminThrowsIllegalArgumentException() {
 
         // Define Stubbing:
         User userToSave = userDto.getUser();
@@ -229,7 +229,7 @@ public class UserServiceTest {
 
     // Find User by ID Success:
     @Test
-    public void findUserByIdSuccessTest() {
+    void findUserByIdSuccessTest() {
 
         // Define Stubbing:
         when(userRepository.findById(1)).thenReturn(java.util.Optional.of(user));
@@ -250,7 +250,7 @@ public class UserServiceTest {
 
     // Login success:
     @Test
-    public void loginSuccessTest() {
+    void loginSuccessTest() {
 
         UserDto credentials = new UserDto();
         credentials.setEmail("email@test.com");
@@ -269,7 +269,7 @@ public class UserServiceTest {
 
     // Login Invalid Username:
     @Test
-    public void loginInvalidCredentialsTest() {
+    void loginInvalidCredentialsTest() {
 
         UserDto credentials = new UserDto();
         credentials.setEmail("email@test.com");
@@ -284,7 +284,7 @@ public class UserServiceTest {
 
     // Login Invalid Password:
     @Test
-    public void loginInvalidPasswordTest() {
+    void loginInvalidPasswordTest() {
 
         UserDto credentials = new UserDto();
         credentials.setEmail("email@test.com");
@@ -300,7 +300,7 @@ public class UserServiceTest {
 
     // Find User by ID Not Found:
     @Test
-    public void findUserByIdNotFoundTest() {
+    void findUserByIdNotFoundTest() {
 
         // Define Stubbing:
         when(userRepository.findById(1)).thenReturn(java.util.Optional.empty());
@@ -311,7 +311,7 @@ public class UserServiceTest {
 
     // Load User by Username Success:
     @Test
-    public void loadUserByUsernameSuccessTest() {
+    void loadUserByUsernameSuccessTest() {
 
         // Define stubbing:
         when(userRepository.findByUsername("email@test.com")).thenReturn(Optional.of(user));
@@ -325,7 +325,7 @@ public class UserServiceTest {
 
     // Load User by Username User Not Found:
     @Test
-    public void loadUserByUsernameThrowsUsernameNotFoundTest() {
+    void loadUserByUsernameThrowsUsernameNotFoundTest() {
 
         // Define stubbing:
         when(userRepository.findByUsername("email@test.com")).thenReturn(Optional.empty());
@@ -336,7 +336,7 @@ public class UserServiceTest {
 
     // Update User by ID:
     @Test
-    public void updateUserByIdTest() {
+    void updateUserByIdTest() {
 
         // Define Stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -358,7 +358,7 @@ public class UserServiceTest {
 
     // Update Password Success:
     @Test
-    public void updatePasswordSuccess() {
+    void updatePasswordSuccess() {
 
         // Define stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -380,7 +380,7 @@ public class UserServiceTest {
 
     // Update Password User Not Found:
     @Test
-    public void updatePasswordThrowsUserNotFoundTest() {
+    void updatePasswordThrowsUserNotFoundTest() {
 
         // Define stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.empty());
@@ -391,7 +391,7 @@ public class UserServiceTest {
 
     // Delete User by ID:
     @Test
-    public void deleteUserByIdTest() {
+    void deleteUserByIdTest() {
 
         // Define Stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -411,7 +411,7 @@ public class UserServiceTest {
 
     // Add Tax Credit to User Success:
     @Test
-    public void addTaxCreditSuccessTest() {
+    void addTaxCreditSuccessTest() {
 
         UserCredit userCreditToSave = userCreditDto.getUserCredit();
         userCreditToSave.setTotalValue(BigDecimal.valueOf(2000.00).setScale(2));
@@ -436,7 +436,7 @@ public class UserServiceTest {
 
     // Find all Credits claimed by a User for a given year:
     @Test
-    public void findAllCreditsByUserIdTest() {
+    void findAllCreditsByUserIdTest() {
 
         // Define stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -451,7 +451,7 @@ public class UserServiceTest {
 
     // Remove Tax Credit from User Success:
     @Test
-    public void removeTaxCreditSuccessTest() {
+    void removeTaxCreditSuccessTest() {
 
         // Define Stubbings:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -466,7 +466,7 @@ public class UserServiceTest {
 
     // Add Tax Deduction to User Success:
     @Test
-    public void addTaxDeductionSuccessTest() {
+    void addTaxDeductionSuccessTest() {
 
         UserDeduction userDeductionToSave = userDeductionDto.getUserDeduction();
         userDeductionToSave.setDeductionAmount(BigDecimal.valueOf(500.00).setScale(2));
@@ -491,7 +491,7 @@ public class UserServiceTest {
 
     // Find all Deductions claimed by a User for a given year:
     @Test
-    public void findAllDeductionsByUserIdAndYearTest() {
+    void findAllDeductionsByUserIdAndYearTest() {
 
         // Define stubbing:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -506,7 +506,7 @@ public class UserServiceTest {
 
     // Remove Tax Deduction from User Success:
     @Test
-    public void removeTaxDeductionSuccessTest() {
+    void removeTaxDeductionSuccessTest() {
 
         // Define Stubbings:
         when(userRepository.findById(1)).thenReturn(Optional.of(user));

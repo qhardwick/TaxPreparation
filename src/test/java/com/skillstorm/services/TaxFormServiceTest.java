@@ -188,7 +188,7 @@ public class TaxFormServiceTest {
 
     // Submit the TaxForm based on the UserID success:
     @Test
-    public void submitTaxFormTest() {
+    void submitTaxFormTest() {
 
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1, 2024)).thenReturn(Optional.empty());
@@ -213,7 +213,7 @@ public class TaxFormServiceTest {
 
     // Find the TaxForm based on ID success:
     @Test
-    public void findTaxFormByUserIdSuccessTest() {
+    void findTaxFormByUserIdSuccessTest() {
 
         // Define stubbings:
         when(taxFormRepository.findById(1)).thenReturn(Optional.of(returnedTaxForm));
@@ -234,7 +234,7 @@ public class TaxFormServiceTest {
 
     // Find the TaxForm based on ID failure:
     @Test
-    public void findTaxFormByUserIdFailureTest() {
+    void findTaxFormByUserIdFailureTest() {
 
         // Define stubbings:
         when(taxFormRepository.findById(1)).thenReturn(Optional.empty());
@@ -245,7 +245,7 @@ public class TaxFormServiceTest {
 
     // Populate the TaxForm based on the UserID success (wages: 5,000):
     @Test
-    public void testPopulateTaxForm5000Success() {
+    void testPopulateTaxForm5000Success() {
 
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(5000.00));
 
@@ -270,7 +270,7 @@ public class TaxFormServiceTest {
 
     // Populate the TaxForm based on the UserID success (wages: 20,000):
     @Test
-    public void testPopulateTaxForm20000Success() {
+    void testPopulateTaxForm20000Success() {
 
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(20000.00));
 
@@ -295,7 +295,7 @@ public class TaxFormServiceTest {
 
     // Populate the TaxForm based on the UserID success (wages: 50,000):
     @Test
-    public void testPopulateTaxForm50000Success() {
+    void testPopulateTaxForm50000Success() {
 
         // Define stubbings:
         when(taxFormRepository.findByUserIdAndYear(1,2024)).thenReturn(Optional.empty());
@@ -318,7 +318,7 @@ public class TaxFormServiceTest {
 
     // Populate the TaxForm based on the UserID success (wages: 100,000):
     @Test
-    public void testPopulateTaxForm100000Success() {
+    void testPopulateTaxForm100000Success() {
 
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(100000.00));
 
@@ -343,7 +343,7 @@ public class TaxFormServiceTest {
 
     // Populate the TaxForm based on the UserID success (wages: 200,000):
     @Test
-    public void testPopulateTaxForm200000Success() {
+    void testPopulateTaxForm200000Success() {
 
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(200000.00));
 
@@ -368,7 +368,7 @@ public class TaxFormServiceTest {
 
     // Populate the TaxForm based on the UserID success (wages: 400,000):
     @Test
-    public void testPopulateTaxForm400000Success() {
+    void testPopulateTaxForm400000Success() {
 
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(400000.00));
 
@@ -393,7 +393,7 @@ public class TaxFormServiceTest {
 
     // Populate the TaxForm based on the UserID success (wages: 1,000,000):
     @Test
-    public void testPopulateTaxForm1000000Success() {
+    void testPopulateTaxForm1000000Success() {
 
         userDto.getW2s().get(0).setWages(BigDecimal.valueOf(1000000.00));
 
@@ -418,7 +418,7 @@ public class TaxFormServiceTest {
 
     // Find all TaxForms based on the UserID:
     @Test
-    public void testFindAllTaxFormsByUserId() {
+    void testFindAllTaxFormsByUserId() {
 
         // Define stubbings:
         when(taxFormRepository.findAllByUserId(1)).thenReturn(taxForms);
@@ -440,7 +440,7 @@ public class TaxFormServiceTest {
 
     // Update the TaxForm by ID:
     @Test
-    public void testUpdateTaxFormById() {
+    void testUpdateTaxFormById() {
 
         // Define stubbings:
         when(taxFormRepository.findById(1)).thenReturn(Optional.of(returnedTaxForm));
@@ -466,7 +466,7 @@ public class TaxFormServiceTest {
 
     // Delete the TaxForm by ID:
     @Test
-    public void testDeleteTaxFormById() {
+    void testDeleteTaxFormById() {
 
         // Define stubbings:
         when(taxFormRepository.findById(1)).thenReturn(Optional.of(returnedTaxForm));

@@ -49,7 +49,7 @@ public class CreditControllerTest {
 
     // Add new Credit:
     @Test
-    public void testAddCredit() {
+    void testAddCredit() {
 
         // Define stubbing:
         when(creditService.addCredit(creditDto)).thenReturn(returnedCreditDto);
@@ -67,7 +67,7 @@ public class CreditControllerTest {
 
     // Get Credit By Id:
     @Test
-    public void testFindCreditById() {
+    void testFindCreditById() {
 
         // Define stubbing:
         when(creditService.findCreditById(1)).thenReturn(returnedCreditDto);
@@ -85,7 +85,7 @@ public class CreditControllerTest {
 
     // Get All Credits:
     @Test
-    public void testFindAllCredits() {
+    void testFindAllCredits() {
 
         // Define stubbing:
         when(creditService.findAllCredits()).thenReturn(returnedCreditDtos);
@@ -104,7 +104,7 @@ public class CreditControllerTest {
 
     // Update Credit By Id:
     @Test
-    public void testUpdateCreditById() {
+    void testUpdateCreditById() {
 
         // Define stubbing:
         when(creditService.updateCreditById(1, creditDto)).thenReturn(returnedCreditDto);
@@ -122,7 +122,7 @@ public class CreditControllerTest {
 
     // Delete Credit By Id:
     @Test
-    public void testDeleteCreditById() {
+    void testDeleteCreditById() {
 
         // Call the method to test:
         ResponseEntity<Void> response = creditController.deleteCreditById(1);

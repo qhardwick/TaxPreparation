@@ -8,7 +8,7 @@ public class CreditTest {
 
     // Test the no-args constructor:
     @Test
-    public void testCredit() {
+    void testCredit() {
         Credit credit = new Credit();
         assertEquals(0, credit.getId());
         assertEquals(null, credit.getName());

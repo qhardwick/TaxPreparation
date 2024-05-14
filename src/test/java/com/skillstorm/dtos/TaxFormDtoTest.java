@@ -12,7 +12,7 @@ public class TaxFormDtoTest {
 
     // Test the no-args constructor:
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         TaxFormDto taxFormDto = new TaxFormDto();
         assertEquals(0, taxFormDto.getId());
         assertEquals(null, taxFormDto.getUser());
@@ -28,7 +28,7 @@ public class TaxFormDtoTest {
 
     // Test the TaxFormDto(year) constructor:
     @Test
-    public void testTaxFormDtoYearConstructor() {
+    void testTaxFormDtoYearConstructor() {
         TaxFormDto taxFormDto = new TaxFormDto(2024);
         assertEquals(0, taxFormDto.getId());
         assertEquals(null, taxFormDto.getUser());
@@ -44,7 +44,7 @@ public class TaxFormDtoTest {
 
     // Test the TaxFormDto(TaxForm) constructor:
     @Test
-    public void testTaxFormDtoConstructor() {
+    void testTaxFormDtoConstructor() {
         TaxForm taxForm = new TaxForm();
         taxForm.setId(1);
         taxForm.setUser(new User());
@@ -73,7 +73,7 @@ public class TaxFormDtoTest {
 
     // Test the getTaxForm method
     @Test
-    public void testGetTaxForm() {
+    void testGetTaxForm() {
         TaxFormDto taxFormDto = new TaxFormDto();
         taxFormDto.setId(1);
         taxFormDto.setUser(new UserDto(new User()));

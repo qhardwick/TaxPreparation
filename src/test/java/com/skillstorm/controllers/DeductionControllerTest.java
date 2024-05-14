@@ -49,7 +49,7 @@ public class DeductionControllerTest {
 
     // Add Deduction:
     @Test
-    public void addDeductionTest() {
+    void addDeductionTest() {
 
         // Define stubbing:
         when(deductionService.addDeduction(deductionDto)).thenReturn(returnedDeductionDto);
@@ -67,7 +67,7 @@ public class DeductionControllerTest {
 
     // Find Deduction by ID:
     @Test
-    public void findDeductionByIdTest() {
+    void findDeductionByIdTest() {
 
         // Define stubbing:
         when(deductionService.findDeductionById(1)).thenReturn(returnedDeductionDto);
@@ -85,7 +85,7 @@ public class DeductionControllerTest {
 
     // Find All Deductions:
     @Test
-    public void findAllDeductionsTest() {
+    void findAllDeductionsTest() {
 
         // Define stubbing:
         when(deductionService.findAllDeductions()).thenReturn(deductionDtos);
@@ -104,7 +104,7 @@ public class DeductionControllerTest {
 
     // Update Deduction by ID:
     @Test
-    public void updateDeductionByIdTest() {
+    void updateDeductionByIdTest() {
 
         // Define stubbing:
         when(deductionService.updateDeductionById(1, deductionDto)).thenReturn(returnedDeductionDto);
@@ -122,7 +122,7 @@ public class DeductionControllerTest {
 
     // Delete Deduction by ID:
     @Test
-    public void deleteDeductionByIdTest() {
+    void deleteDeductionByIdTest() {
 
         // Call method to test:
         ResponseEntity<Void> response = deductionController.deleteDeductionById(1);

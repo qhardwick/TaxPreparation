@@ -11,7 +11,7 @@ public class CreditDtoTest {
 
     // Test the no-args constructor:
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         CreditDto creditDto = new CreditDto();
         assertEquals(0, creditDto.getId());
         assertEquals(null, creditDto.getName());
@@ -20,7 +20,7 @@ public class CreditDtoTest {
 
     // Test the CreditDto(Credit) constructor:
     @Test
-    public void testCreditDtoConstructor() {
+    void testCreditDtoConstructor() {
         Credit credit = new Credit();
         credit.setId(1);
         credit.setName("Test Credit");
@@ -36,7 +36,7 @@ public class CreditDtoTest {
 
     // Test the getCredit method
     @Test
-    public void testGetCredit() {
+    void testGetCredit() {
         CreditDto creditDto = new CreditDto();
         creditDto.setId(1);
         creditDto.setName("Test Credit");

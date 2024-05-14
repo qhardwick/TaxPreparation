@@ -127,7 +127,7 @@ public class UserControllerTest {
 
     // Test Add new User:
     @Test
-    public void addNewUserTest() {
+    void addNewUserTest() {
 
         // Define stubbing:
         when(userService.addUser(newUser)).thenReturn(returnedNewUser);
@@ -148,7 +148,7 @@ public class UserControllerTest {
 
     // Test Add new Admin:
     @Test
-    public void addNewAdminTest() {
+    void addNewAdminTest() {
 
         returnedNewUser.setRole("ADMIN");
 
@@ -170,7 +170,7 @@ public class UserControllerTest {
 
     // Test Find User by ID:
     @Test
-    public void findUserByIdTest() {
+    void findUserByIdTest() {
 
         // Define stubbing:
         when(userService.findUserById(1)).thenReturn(returnedNewUser);
@@ -189,7 +189,7 @@ public class UserControllerTest {
 
     // Test Login:
     @Test
-    public void loginTest() {
+    void loginTest() {
 
         // Define stubbing:
         when(userService.login(newUser)).thenReturn(returnedNewUser);
@@ -208,7 +208,7 @@ public class UserControllerTest {
 
     // Test Update User:
     @Test
-    public void updateUserTest() {
+    void updateUserTest() {
 
         // Define stubbing:
         when(userService.updateUserById(1, updatedUser)).thenReturn(returnedUpdatedUser);
@@ -233,7 +233,7 @@ public class UserControllerTest {
 
     // Test Update Password:
     @Test
-    public void updatePasswordTest() {
+    void updatePasswordTest() {
 
         // Call method to test:
         ResponseEntity<Void> result =  userController.updatePasswordById(1, "newPassword");
@@ -253,7 +253,7 @@ public class UserControllerTest {
 
     // Test Delete User:
     @Test
-    public void deleteUserTest() {
+    void deleteUserTest() {
 
         // Call method to test:
         ResponseEntity<Void> result =  userController.deleteUserById(1);
@@ -271,7 +271,7 @@ public class UserControllerTest {
 
     // Test Add Tax Credit:
     @Test
-    public void addTaxCreditTest() {
+    void addTaxCreditTest() {
 
         // Define stubbing:
         when(userService.addTaxCredit(1, userCreditDto)).thenReturn(returnedUserCreditDto);
@@ -292,7 +292,7 @@ public class UserControllerTest {
 
     // Test Find All User Credits by User ID:
     @Test
-    public void findAllCreditsByUserIdTest() {
+    void findAllCreditsByUserIdTest() {
 
         // Define stubbing:
         when(userService.findAllCreditsByUserIdAndYear(1, 2024)).thenReturn(userCreditDtoList);
@@ -313,7 +313,7 @@ public class UserControllerTest {
 
     // Test Remove Tax Credit:
     @Test
-    public void removeTaxCreditTest() {
+    void removeTaxCreditTest() {
 
         // Call method to test:
         ResponseEntity<Void> result =  userController.removeTaxCredit(1, 1);
@@ -333,7 +333,7 @@ public class UserControllerTest {
 
     // Test Add Deduction:
     @Test
-    public void addDeductionTest() {
+    void addDeductionTest() {
 
         // Define stubbing:
         when(userService.addDeduction(1, userDeductionDto)).thenReturn(returnedUserDeductionDto);
@@ -354,7 +354,7 @@ public class UserControllerTest {
 
     // Test Find All User Deductions by User ID:
     @Test
-    public void findAllDeductionsByUserIdTest() {
+    void findAllDeductionsByUserIdTest() {
 
         // Define stubbing:
         when(userService.findAllDeductionsByUserIdAndYear(1, 2024)).thenReturn(userDeductionDtoList);
@@ -375,7 +375,7 @@ public class UserControllerTest {
 
     // Test Remove Deduction:
     @Test
-    public void removeDeductionTest() {
+    void removeDeductionTest() {
 
         // Call method to test:
         ResponseEntity<Void> result =  userController.removeDeduction(1, 1);

@@ -8,7 +8,7 @@ public class TaxFormTest {
 
     // Test the no-arg constructor
     @Test
-    public void testTaxForm() {
+    void testTaxForm() {
         TaxForm taxForm = new TaxForm();
         assertEquals(0, taxForm.getId());
         assertEquals(null, taxForm.getUser());

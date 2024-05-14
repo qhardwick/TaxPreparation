@@ -8,7 +8,7 @@ public class UserTest {
 
     // Test the no-arg constructor:
     @Test
-    public void testUser() {
+    void testUser() {
         User user = new User();
         assertEquals(0, user.getId());
         assertEquals(null, user.getFirstName());
@@ -24,7 +24,7 @@ public class UserTest {
 
     // Test the getAuthorities method:
     @Test
-    public void testGetAuthorities() {
+    void testGetAuthorities() {
         User user = new User();
         user.setRole("ROLE_USER");
         assertEquals(1, user.getAuthorities().size());

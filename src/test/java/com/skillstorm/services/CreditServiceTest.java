@@ -49,7 +49,7 @@ public class CreditServiceTest {
 
     // Add Credit:
     @Test
-    public void addCreditTest() {
+    void addCreditTest() {
 
         //Define stubbing:
         when(creditRepository.saveAndFlush(creditDto.getCredit())).thenReturn(credit);
@@ -66,7 +66,7 @@ public class CreditServiceTest {
     // Get Credit By Id and Succeed:
     @Test
     @SneakyThrows
-    public void findCreditByIdSuccessTest() {
+    void findCreditByIdSuccessTest() {
 
         //Define stubbing:
         when(creditRepository.findById(1)).thenReturn(Optional.of(credit));
@@ -82,7 +82,7 @@ public class CreditServiceTest {
 
     // Get Credit By Id Not Exists:
     @Test
-    public void findCreditByIdNotFoundTest() {
+    void findCreditByIdNotFoundTest() {
         //Define stubbing:
         when(creditRepository.findById(2)).thenReturn(Optional.empty());
 
@@ -92,7 +92,7 @@ public class CreditServiceTest {
 
     // Find All Credits:
     @Test
-    public void findAllCreditsTest() {
+    void findAllCreditsTest() {
 
         //Define stubbing:
         when(creditRepository.findAll()).thenReturn(List.of(credit));
@@ -108,7 +108,7 @@ public class CreditServiceTest {
 
     // Update Credit By Id:
     @Test
-    public void updateCreditByIdTest() {
+    void updateCreditByIdTest() {
 
         //Define stubbing:
         when(creditRepository.findById(1)).thenReturn(Optional.of(credit));
@@ -125,7 +125,7 @@ public class CreditServiceTest {
 
     // Delete Credit By Id:
     @Test
-    public void deleteCreditByIdTest() {
+    void deleteCreditByIdTest() {
 
         //Define stubbing:
         when(creditRepository.findById(1)).thenReturn(Optional.of(credit));

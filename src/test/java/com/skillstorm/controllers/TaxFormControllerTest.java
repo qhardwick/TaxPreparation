@@ -118,7 +118,7 @@ public class TaxFormControllerTest {
 
     // Test the populateTaxFormByUserId method:
     @Test
-    public void populateTaxFormByUserIdTest() {
+    void populateTaxFormByUserIdTest() {
 
         // Define stubbing:
         when(taxFormService.populateTaxFormByUserId(1, 2024)).thenReturn(taxFormDto);
@@ -142,7 +142,7 @@ public class TaxFormControllerTest {
 
     // Test the findAllTaxFormsByUserId method:
     @Test
-    public void findAllTaxFormsByUserIdTest() {
+    void findAllTaxFormsByUserIdTest() {
 
         // Define stubbing:
         when(taxFormService.findAllTaxFormsByUserId(1)).thenReturn(taxFormDtos);
@@ -167,7 +167,7 @@ public class TaxFormControllerTest {
 
     // Test the updateTaxFormById method:
     @Test
-    public void updateTaxFormByIdTest() {
+    void updateTaxFormByIdTest() {
 
         // Define stubbing:
         when(taxFormService.updateTaxFormById(1)).thenReturn(returnedTaxFormDto);
@@ -192,7 +192,7 @@ public class TaxFormControllerTest {
 
     // Test the deleteTaxFormById method:
     @Test
-    public void deleteTaxFormByIdTest() {
+    void deleteTaxFormByIdTest() {
 
         // Call the method to test:
         ResponseEntity<Void> result = taxFormController.deleteTaxFormById(1);
