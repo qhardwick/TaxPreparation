@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CreditServiceTest {
+class CreditServiceTest {
 
     @InjectMocks private static CreditServiceImpl creditService;
     @Mock private static CreditRepository creditRepository;

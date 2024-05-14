@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class DeductionControllerTest {
+class DeductionControllerTest {
 
     @InjectMocks private static DeductionController deductionController;
     @Mock private static DeductionService deductionService;

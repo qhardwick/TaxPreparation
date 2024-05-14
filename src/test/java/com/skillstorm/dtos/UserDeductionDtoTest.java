@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserDeductionDtoTest {
+class UserDeductionDtoTest {
 
     private static Deduction deduction;
     private static User user;

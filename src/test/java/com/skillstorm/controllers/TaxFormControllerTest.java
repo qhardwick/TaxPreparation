@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TaxFormControllerTest {
+class TaxFormControllerTest {
 
     @InjectMocks private static TaxFormController taxFormController;
     @Mock private static TaxFormService taxFormService;

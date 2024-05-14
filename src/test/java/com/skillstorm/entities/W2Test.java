@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class W2Test {
+class W2Test {
 
     // Test the no-arg constructor:
     @Test

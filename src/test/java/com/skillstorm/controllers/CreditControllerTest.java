@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CreditControllerTest {
+class CreditControllerTest {
 
     @InjectMocks private static CreditController creditController;
     @Mock private static CreditService creditService;

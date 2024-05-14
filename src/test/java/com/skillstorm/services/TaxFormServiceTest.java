@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TaxFormServiceTest {
+class TaxFormServiceTest {
 
     @InjectMocks private static TaxFormServiceImpl taxFormService;
     @Mock private static TaxFormRepository taxFormRepository;

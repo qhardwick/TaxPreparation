@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class W2ControllerTest {
+class W2ControllerTest {
 
     @InjectMocks private static W2Controller w2Controller;
     @Mock private static W2Service w2Service;

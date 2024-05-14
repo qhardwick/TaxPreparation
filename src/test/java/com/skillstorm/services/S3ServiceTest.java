@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class S3ServiceTest {
+class S3ServiceTest {
 
     @InjectMocks private static S3ServiceImpl s3Service;
     @Mock private static S3Client s3Client;

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class W2ServiceTest {
+class W2ServiceTest {
 
     @InjectMocks private static W2ServiceImpl w2Service;
     @Mock private static S3Service s3Service;
