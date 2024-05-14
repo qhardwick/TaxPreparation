@@ -95,7 +95,7 @@ public class UserDto {
         user.setAddress(this.address);
         user.setPhoneNumber(this.phoneNumber);
         user.setSsn(this.ssn);
-        user.setW2s(this.w2s.stream().map(W2Dto::getW2).collect(Collectors.toList()));
+        user.setW2s(this.w2s.stream().map(W2Dto::getW2).toList());
         user.setRole(this.role);
 
         return user;

@@ -85,8 +85,7 @@ public class W2Controller {
         Tika tika = new Tika();
         try {
             // Use Tika to parse the file
-            String contentType = tika.detect(resource.getInputStream());
-            return contentType;
+            return tika.detect(resource.getInputStream());
         } catch (IOException e) {
             // Handle the exception
             throw new RuntimeException("Failed to determine content type.", e);

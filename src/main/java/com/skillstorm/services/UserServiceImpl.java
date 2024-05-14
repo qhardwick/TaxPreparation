@@ -89,17 +89,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     // Login User:
     @Override
     public UserDto login(UserDto authCredentials) {
-        String email = authCredentials.getEmail();
-        String password = authCredentials.getPassword();
+        String authEmail = authCredentials.getEmail();
+        String authPassword = authCredentials.getPassword();
 
-        User user = userRepository.findByUsername(email)
+        User foundUser = userRepository.findByUsername(authEmail)
                 .orElseThrow(() -> new IllegalArgumentException(environment.getProperty(SystemMessages.INVALID_CREDENTIALS.toString())));
 
-        if (!passwordEncoder.matches(authCredentials.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(authPassword, foundUser.getPassword())) {
             throw new IllegalArgumentException(environment.getProperty(SystemMessages.INVALID_CREDENTIALS.toString()));
         }
 
-        return new UserDto(user);
+        return new UserDto(foundUser);
     }
 
     // Load User by Username (for Spring Security):

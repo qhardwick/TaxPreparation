@@ -68,7 +68,7 @@ public class TaxFormControllerTest {
 
     // Test the submitTaxForm method:
     @Test
-    public void submitTaxFormTest() {
+    void submitTaxFormTest() {
 
         // Define stubbing:
         when(taxFormService.submitTaxForm(1, 2024)).thenReturn(returnedTaxFormDto);
@@ -93,7 +93,7 @@ public class TaxFormControllerTest {
 
     // Test the findTaxFormById method:
     @Test
-    public void findTaxFormByIdTest() {
+    void findTaxFormByIdTest() {
 
         // Define stubbing:
         when(taxFormService.findTaxFormById(1)).thenReturn(returnedTaxFormDto);
